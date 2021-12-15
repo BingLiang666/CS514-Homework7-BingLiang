@@ -19,46 +19,119 @@ public class Library {
     private ArrayList<Artist> artists;
     private ArrayList<Album> albums;
 
+
+    /**
+     * This is a constructor.
+     */
     public Library() {
         songs = new ArrayList<>();
         artists = new ArrayList<>();
         albums = new ArrayList<>();
     }
 
+    /**
+     *
+     * @param songs an arrayList of songs
+     * @param artists an arrayList of artists
+     * @param albums an arrayList of albums
+     *
+     * This is a constructor.
+     *
+     */
     public Library(ArrayList<Song> songs, ArrayList<Artist> artists, ArrayList<Album> albums) {
         this.songs = songs;
         this.artists = artists;
         this.albums = albums;
     }
 
+    /**
+     *
+     * @param s song needs to be checked
+     * @return
+     *
+     * This returns true if the song is in the library.
+     *
+     */
     public boolean findSong(Song s) {
         return songs.contains(s);
     }
 
+    /**
+     *
+     * @return
+     *
+     * This returns an arrayList of songs in the library
+     *
+     */
     public ArrayList<Song> getSongs() {
         return songs;
     }
 
+    /**
+     *
+     * @return
+     *
+     * This returns an arrayList of artists in the library
+     *
+     */
     public ArrayList<Artist> getArtists() {
         return artists;
     }
 
+    /**
+     *
+     * @return
+     *
+     * This returns an arrayList of albums in the library
+     *
+     */
     public ArrayList<Album> getAlbums() {
         return albums;
     }
 
+    /**
+     *
+     * @param song song needs to be added into library
+     *
+     * This adds song into library
+     *
+     */
     public void addSong(Song song) {
         songs.add(song);
     }
 
+    /**
+     *
+     * @param artist artist needs to be added into library
+     *
+     * This adds artist into library
+     *
+     */
     public void addArtist(Artist artist) {
         artists.add(artist);
     }
 
+    /**
+     *
+     * @param album album needs to be added into library
+     *
+     * This adds album into library
+     *
+     */
     public void addAlbum(Album album) {
         albums.add(album);
     }
 
+    /**
+     *
+     * @param song new song needs to be checked
+     * @return
+     *
+     * This returns a string "noDuplicatedSong" if there is no duplicated song of the new song in the library
+     * This returns a string "importNewSong" if user wants to import that song even thought it is duplicated
+     * This returns null if this new song has duplicated song in the library and user doesn't want to import it
+     *
+     */
     public String findDuplicates(Song song) {
         Scanner input = new Scanner(System.in);
         String deleteOrNot;
@@ -99,7 +172,7 @@ public class Library {
                 }
             }
         }
-        return null;
+        return "noDuplicatedSong";
     }
 
     public static String getContent(Node n) {

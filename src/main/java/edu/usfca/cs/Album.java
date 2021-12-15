@@ -18,10 +18,14 @@ public class Album extends Entity {
 
     public Album() { songs = new ArrayList<>(); }
 
-    public Album(int ID) { super(ID); }
+    public Album(int ID) {
+        super(ID);
+        songs = new ArrayList<>();
+    }
 
     public Album(int ID, String name) {
         super(ID, name);
+        songs = new ArrayList<>();
     }
 
     public String getName() { return name; }

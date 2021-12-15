@@ -4,25 +4,34 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class SongTest {
+class MusicBrainzTest {
+    SQLite sqLite;
+    ArrayList<Song> songs;
+    ArrayList<Artist> artists;
+    ArrayList<Album> albums;
+    Statement statement;
+    Connection connection;
+    MusicBrainz musicBrainz;
+    StringBuilder response;
     Library library;
     Song song1, song2;
     Album album1, album2;
     Artist artist1, artist2, newArtist;
-    Connection connection = null;
-    Statement statement;
-    SQLite sqLite;
 
     @BeforeEach
     void setUp() {
-        sqLite = new SQLite();
         library = new Library();
+        sqLite = new SQLite();
+        songs = new ArrayList<>();
+        artists = new ArrayList<>();
+        albums = new ArrayList<>();
+        connection = null;
+        musicBrainz = new MusicBrainz();
         song1 = new Song(101, "happy birthday");
         song2 = new Song(102, "good day");
         artist1 = new Artist(201, "adele");
@@ -49,31 +58,32 @@ class SongTest {
         library.addArtist(artist2);
         library.addAlbum(album1);
         library.addAlbum(album2);
+
     }
 
     @Test
-    void setArtistForSong() {
-        try {
-            connection = DriverManager.getConnection("jdbc:sqlite:test.db");
-            statement = connection.createStatement();
-            statement.setQueryTimeout(30);  // set timeout to 30 sec.
-            sqLite.createSQLTables(statement);
-            sqLite.initiateLibrary(statement);
-            song1.setArtistForSong(library);
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        } finally {
-            try {
-                if (connection != null)
-                    connection.close();
-            } catch (SQLException e) {
-                // connection close failed.
-                System.err.println(e.getMessage());
-            }
-        }
+    void insertSongsFromMusicBrainz() {
     }
 
     @Test
-    void insertAlbumIntoSong() {
+    void buildConnectionWithMusicBrainz() {
+        StringBuilder response = new StringBuilder();
+        String songName = "red";
+        musicBrainz.buildConnectionWithMusicBrainz(songName, response);
+    }
+
+    @Test
+    void grabSongs() {
+    }
+
+    @Test
+    void selectSong() {
+    }
+
+    @Test
+    void testGrabSongs() {
+        String songName = "red";
+        musicBrainz.buildConnectionWithMusicBrainz(songName, response);
+        musicBrainz.grabSongs(statement, response, songName, songs, library);
     }
 }

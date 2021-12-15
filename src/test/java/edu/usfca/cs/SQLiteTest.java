@@ -19,9 +19,11 @@ class SQLiteTest {
     ArrayList<Album> albums;
     Statement statement;
     Connection connection;
+    Display display;
 
     @BeforeEach
     void setUp() {
+        display = new Display();
         sqLite = new SQLite();
         songs = new ArrayList<>();
         artists = new ArrayList<>();
@@ -37,9 +39,9 @@ class SQLiteTest {
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
             sqLite.initiateLibrary(statement);
-            sqLite.displaySongs(sqLite.library.getSongs());
-            sqLite.displayArtists(sqLite.library.getArtists());
-            sqLite.displayAlbums(sqLite.library.getAlbums());
+            display.displaySongs(sqLite.library.getSongs());
+            display.displayArtists(sqLite.library.getArtists());
+            display.displayAlbums(sqLite.library.getAlbums());
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         } finally {
@@ -51,47 +53,4 @@ class SQLiteTest {
         }
     }
 
-    @Test
-    void insertArtistFromAudioDB() {
-    }
-
-    @Test
-    void insertSongsFromMusicBrainz() {
-    }
-
-    @Test
-    void displaySongsAfterCertainYear() {
-        sqLite.displaySongsAfterCertainYear();
-    }
-
-    @Test
-    void buildConnectionWithMusicBrainz() {
-        StringBuilder response = new StringBuilder();
-        String songName = "red";
-        sqLite.buildConnectionWithMusicBrainz(songName, response);
-    }
-
-
-    @Test
-    void testInsertArtistFromAudioDB() {
-        String artistName = "Taylor Swift";
-        try {
-            connection = DriverManager.getConnection("jdbc:sqlite:test.db");
-            statement = connection.createStatement();
-            statement.setQueryTimeout(30);  // set timeout to 30 sec.
-            sqLite.createSQLTables(statement);
-            sqLite.initiateLibrary(statement);
-            sqLite.insertArtistFromAudioDB(statement, artistName);
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-        } finally {
-            try {
-                if (connection != null)
-                    connection.close();
-            } catch (SQLException e) {
-                // connection close failed.
-                System.err.println(e.getMessage());
-            }
-        }
-    }
 }

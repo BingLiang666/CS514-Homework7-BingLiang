@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Artist extends Entity {
-
     protected ArrayList<Song> songs;
     protected ArrayList<Album> albums;
     protected String AudioDB_ID;
@@ -26,10 +25,14 @@ public class Artist extends Entity {
 
     public Artist(int ID) {
         super(ID);
+        songs = new ArrayList<>();
+        albums = new ArrayList<>();
     }
 
     public Artist(int ID, String name) {
         super(ID, name);
+        songs = new ArrayList<>();
+        albums = new ArrayList<>();;
     }
 
     public String getArtistArea() {
