@@ -8,8 +8,8 @@ public class Display {
     protected UserPrompt userPrompt;
     protected Scanner input = new Scanner(System.in);
     protected String userInput;
-    protected SQLite sqLite;
-    protected IsInteger isInteger;
+    public SQLite sqLite;
+    protected IsInteger isInteger = new IsInteger();
 
 
     public void displaySongs(ArrayList<Song> songs) {
@@ -82,7 +82,7 @@ public class Display {
     }
 
     public void displaySongsAfterCertainYear(Library library) {
-        System.out.println("Please enter that year.(Please enter a number smaller than 2021 in 4-digit format, eg, 2020.)");
+        System.out.println("Please enter that year. (Note: The number represented for year should be smaller than or equal to 2021 and in 4-digit format, eg, 2020.)");
         userInput = input.nextLine();
         int year;
         while (true) {
@@ -108,7 +108,7 @@ public class Display {
                 "albumID", "songGenre", "songReleaseDate", "songLanguage");
         for(Song s: library.getSongs()) {
             String yearOfSong = s.getSongReleaseDate().substring(0,4);
-            if (Integer.parseInt(yearOfSong) <= year) {
+            if (Integer.parseInt(yearOfSong) >= year) {
                 System.out.printf("%-3s | %-25s | %-36s | %-8s | %-8s | %-10s | %-16s | %s\n", s.getEntityID(), s.getName(), s.getMusicBrainzID(),
                         s.getPerformer().getEntityID(), s.getAlbum().getEntityID(), s.getGenre(), s.getSongReleaseDate(), s.getSongLanguage());
                 index++;
@@ -173,22 +173,6 @@ public class Display {
         }
         this.requestForAnotherSearch(library);
         sqLite.mainMenu();
-    }
-
-    public void requestForAnotherSearch(Library library) {
-        System.out.println("Do you prefer to do another round of search? (Please enter Y/N)");
-        String userChoice = input.nextLine();
-        while (true) {
-            if (userChoice.toLowerCase(Locale.ROOT).equals("y")) {
-                this.displayPartOfLibrary(library);
-            } else if (userChoice.toLowerCase(Locale.ROOT).equals("n")) {
-                System.out.println("Great! Let's jump to the main menu.");
-                break;
-            } else {
-                System.out.println("Invalid input. Please enter again.");
-                userChoice = input.nextLine();
-            }
-        }
     }
 
     public void displayPartOfArtistsInLibrary(Library library) {
@@ -279,8 +263,8 @@ public class Display {
                 this.displayAlbumsInCertainGenre(library);
             default:
                 System.out.println("Invalid input. Please enter a number from 1~2.");
-                this.displayPartOfAlbumsInLibrary(library);
-                break;
+                this.displayPartOfArtistsInLibrary(library);
+                userInput = input.nextLine();
         }
     }
 
@@ -334,5 +318,21 @@ public class Display {
         }
         this.requestForAnotherSearch(library);
         sqLite.mainMenu();
+    }
+
+    public void requestForAnotherSearch(Library library) {
+        System.out.println("Do you prefer to do another round of search? (Please enter Y/N)");
+        String userChoice = input.nextLine();
+        while (true) {
+            if (userChoice.toLowerCase(Locale.ROOT).equals("y")) {
+                this.displayPartOfLibrary(library);
+            } else if (userChoice.toLowerCase(Locale.ROOT).equals("n")) {
+                System.out.println("Great! Let's jump to the main menu.");
+                break;
+            } else {
+                System.out.println("Invalid input. Please enter again.");
+                userChoice = input.nextLine();
+            }
+        }
     }
 }

@@ -7,7 +7,7 @@ public class IsInteger {
      * @param input string given by user
      * @return
      *
-     * this returns true if the string given by user can be converted to integer, otherwise returns false
+     * this returns true if the string given by user can be converted to an integer, otherwise returns false
      *
      */
     public boolean isInteger(String input) {

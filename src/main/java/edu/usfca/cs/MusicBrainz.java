@@ -27,14 +27,10 @@ public class MusicBrainz {
         ArrayList<Song> duplicatedSongs = new ArrayList<>();
         this.buildConnectionWithMusicBrainz(songName, response);
         Song newSong = this.grabSongs(statement, response, songName, duplicatedSongs, library);
-        if (newSong != null) {
+        if (newSong != null && newSong.getPerformer() != null && newSong.getAlbum() != null) {
             statement.executeUpdate(newSong.toSQL());
-            if (newSong.getPerformer() != null) {
-                statement.executeUpdate(newSong.getPerformer().toSQL());
-            }
-            if (newSong.getAlbum() != null) {
-                statement.executeUpdate(newSong.getAlbum().toSQL());
-            }
+            statement.executeUpdate(newSong.getPerformer().toSQL());
+            statement.executeUpdate(newSong.getAlbum().toSQL());
             System.out.println("The song \"" + newSong.getName() + "\" has been successfully imported into the database.");
         }
         while (true) {
@@ -64,7 +60,10 @@ public class MusicBrainz {
             int code = httpConnection.getResponseCode();
 
             String message = httpConnection.getResponseMessage();
-            System.out.println(code + " " + message);
+            System.out.println("Building connection to AudioDB successes: \"" + code + " " + message + "\"");
+            if (!message.equalsIgnoreCase("ok")) {
+                System.out.println("There is no record for the song in the AudioDB.");
+            }
             if (code != HttpURLConnection.HTTP_OK) {
                 return;
             }
@@ -130,7 +129,7 @@ public class MusicBrainz {
                     duplicatedSongs.get(i).getPerformer().getName(), duplicatedSongs.get(i).getSongReleaseDate(), duplicatedSongs.get(i).getSongLanguage());
         }
         System.out.println("Is there any song among those 5 songs that you might want to import into the library? (Enter Y/N)");
-        String userInput = userPrompt.promptUserForYesOrNO();
+        String userInput = userPrompt.promptUserForYesOrNo();
         if (userInput.equalsIgnoreCase("y")) {
             System.out.println("Great! Now please choose the song which is closest to the song that you are looking for." +
                     "\n(Input the exact number after # to import the chosen one:)");
@@ -169,33 +168,15 @@ public class MusicBrainz {
             if (artistFound) {         // if there is an artists added to the song, we can further add album for the song, otherwise we stop finding album for the song
                 albumFound = newSong.setAlbumForSong(library);
             }
-            if (library.findDuplicates(newSong) != null) {
-                if (artistFound) {
-                    if (!albumFound) {
-                        System.out.println("There is no album in the library or AudioDB that could be linked to the song you are trying to import.\n" +
-                                "Do you want to import that song any way?(Y/N)");
-                        if (userPrompt.promptUserForYesOrNO().equalsIgnoreCase("y")) {
-                            library.addSong(newSong);
-                            return newSong;
-                        } else {
-                            System.out.println("Gotcha! We will not import the song.");
-                            return null;
-                        }
-                    }
+            if (artistFound && albumFound) {
+                if (library.findDuplicates(newSong) != null) {
                     library.addSong(newSong);
                     return newSong;
                 } else {
-                    System.out.println("There is no album or artist in the library or AudioDB that could be linked to the song you are trying to import.\n" +
-                            "Do you want to import that song any way?(Y/N)");
-                    if (userPrompt.promptUserForYesOrNO().equalsIgnoreCase("y")) {
-                        library.addSong(newSong);
-                        return newSong;
-                    } else {
-                        System.out.println("Gotcha! We will not import the song.");
-                        return null;
-                    }
+                    System.out.println("Okay. We will not import this song.");
                 }
             }
+            System.out.println("Sorry...Missed data for artist/album. We could not import this song.\nLet's try something else!");
         } else {
             System.out.println("Gotcha");
             return null;

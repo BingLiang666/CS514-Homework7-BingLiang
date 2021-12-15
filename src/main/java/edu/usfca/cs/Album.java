@@ -21,11 +21,13 @@ public class Album extends Entity {
     public Album(int ID) {
         super(ID);
         songs = new ArrayList<>();
+        artist = new Artist();
     }
 
     public Album(int ID, String name) {
         super(ID, name);
         songs = new ArrayList<>();
+        artist = new Artist();
     }
 
     public String getName() { return name; }

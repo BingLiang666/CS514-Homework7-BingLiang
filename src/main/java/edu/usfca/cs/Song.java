@@ -30,7 +30,10 @@ public class Song extends Entity implements Comparable<Song> {
      * This is a constructor.
      *
      */
-    public Song(int ID) { super(ID); }
+    public Song(int ID) {
+        super(ID);
+        album = new Album();
+        performer = new Artist();}
 
     /**
      *
@@ -42,6 +45,8 @@ public class Song extends Entity implements Comparable<Song> {
      */
     public Song(int ID, String name) {
         super(ID, name);
+        album = new Album();
+        performer = new Artist();
     }
 
     /**
@@ -421,7 +426,7 @@ public class Song extends Entity implements Comparable<Song> {
         for (Artist a: library.getArtists()) {
             if (this.getPerformer().getName().equalsIgnoreCase(a.getName())) {
                 System.out.println("We have found an artist in the library that might be the artist of the song.");
-                System.out.println("Artist INFO");
+                System.out.println("---ARTIST INFO---");
                 System.out.format("Artist Name:%-40sAudioDB_ID:%-18sArtist Style:%-10sArtist Area:%-10s\n", a.getName(), a.getAudioDB_ID(),
                         a.getStyle(), a.getArtistArea());
                 if (userPrompt.keepArtistInLibraryForSongOrNot()) {         // if there is the artist of the song in the library, we prompt user if this artist is the correct one
@@ -440,16 +445,16 @@ public class Song extends Entity implements Comparable<Song> {
                 connection = DriverManager.getConnection("jdbc:sqlite:music.db");
                 Statement statement = connection.createStatement();
                 statement.setQueryTimeout(30);  // set timeout to 30 sec.
-                newArtist = audioDB.insertArtistFromAudioDB(statement, this.getPerformer().getName(), library);
+                newArtist = audioDB.insertArtistFromAudioDB(this.getPerformer().getName(), library);
                 if (newArtist != null) {
-                    if (userPrompt.keepArtistInAudioDBForSongOrNot()) {
-                        System.out.println("Great! We will link this artist with the song.");
-                        this.setPerformer(newArtist);       // if we have founded the artist of the song and successfully imported the artist to the library, we link the song and newly imported artist together
-                        newArtist.addSong(this);
-                        return true;                        // if the artist has been successfully linked with the song, return true. (this will help us decide whether we could search album in AudioDB later)
-                    } else {
-                        System.out.println("Gotcha! We will not import artist for the song. The artist and album of the song will both be set to null.");
-                    }
+                    System.out.println("Great! We have found that artist in AudioDB.");
+                    System.out.println("---ARTIST INFO---");
+                    System.out.format("Artist Name:%-40sAudioDB_ID:%-18sArtist Style:%-10sArtist Area:%-10s\n", newArtist.getName(), newArtist.getAudioDB_ID(),
+                            newArtist.getStyle(), newArtist.getArtistArea());
+                    System.out.println("We will link this artist to the song.");
+                    this.setPerformer(newArtist);       // if we have founded the artist of the song and successfully imported the artist to the library, we link the song and newly imported artist together
+                    newArtist.addSong(this);
+                    return true;                        // if the artist has been successfully linked with the song, return true. (this will help us decide whether we could search album in AudioDB later)
                 }
                 return false;                           // if the artist has not been successfully linked with the song, return false
             } catch (SQLException e) {
@@ -485,11 +490,11 @@ public class Song extends Entity implements Comparable<Song> {
             if (this.getPerformer().getAudioDB_ID().equalsIgnoreCase(a.getArtist().getAudioDB_ID())) {
                 if (this.getSongReleaseDate().substring(0,4).equalsIgnoreCase(a.getReleaseDate().substring(0,4))) {
                     System.out.println("We have found an album in the library that might be the artist of the song.");
-                    System.out.println("Album INFO");
+                    System.out.println("---ALBUM INFO---");
                     System.out.format("Album Name:%-40sAudioDB_ID:%-18sAlbum Genre:%-10sAlbum ReleaseDate:%-10s\n", a.getName(), a.getAudioDB_ID(),
                             a.getAlbumGenre(), a.getReleaseDate());
                     System.out.println("Is this album the one that stores the song?");
-                    if(userPrompt.promptUserForYesOrNO().equalsIgnoreCase("y")) {
+                    if(userPrompt.promptUserForYesOrNo().equalsIgnoreCase("y")) {
                         this.setAlbum(a);                    // if there is the album of the song in the library, we ask users if this album is the right one
                         this.getPerformer().addAlbum(a);     // if they answer yes then we directly link the song, artist, album together
                         a.setArtist(this.getPerformer());
@@ -507,8 +512,13 @@ public class Song extends Entity implements Comparable<Song> {
                 connection = DriverManager.getConnection("jdbc:sqlite:music.db");
                 Statement statement = connection.createStatement();
                 statement.setQueryTimeout(30);  // set timeout to 30 sec.
-                newAlbum = audioDB.insertAlbumFromAudioDB(statement, this.getPerformer(), this.getSongReleaseDate(), library);
+                newAlbum = audioDB.insertAlbumFromAudioDB(this.getPerformer(), this.getSongReleaseDate(), library);
                 if (newAlbum != null) {
+                    System.out.println("We will link this album to the song.");
+                    System.out.println("---ALBUM INFO---");
+                    System.out.format("Album Name:%-40sAudioDB_ID:%-18sAlbum Genre:%-10sAlbum ReleaseDate:%-10s\n", newAlbum.getName(), newAlbum.getAudioDB_ID(),
+                            newAlbum.getAlbumGenre(), newAlbum.getReleaseDate());
+                    System.out.println();
                     this.setAlbum(newAlbum);          // if we have found the album of the song and successfully imported the album to the library, we link the song, artist and newly imported album together
                     this.getPerformer().addAlbum(newAlbum);
                     newAlbum.setArtist(this.getPerformer());

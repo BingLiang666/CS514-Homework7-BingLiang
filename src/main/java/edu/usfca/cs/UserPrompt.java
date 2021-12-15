@@ -24,11 +24,10 @@ public class UserPrompt {
         return false;
     }
 
+    /*
     public boolean keepArtistInAudioDBForSongOrNot() {
         Scanner input = new Scanner(System.in);
         System.out.println("Is this artist the one for the song? (Y/N)");
-        System.out.println("Please NOTE: if you doesn't choose to import the artist that we have found for you in AudioDB," +
-                "The song will be imported to the library with no artist or album linked to it!!!");
         String userInput = input.nextLine();
         while (!(userInput.equalsIgnoreCase("y") || userInput.equalsIgnoreCase("n"))) {
             System.out.println("Invalid input. Please enter \"Y\" or \"N\"");
@@ -38,20 +37,20 @@ public class UserPrompt {
             return true;
         }
         return false;
-    }
+    }*/
 
     public String requestForAnotherInsertOfSongsWithName(){
-        System.out.println("Do you prefer to do another round of song import with song name? (Please enter Y/N)");
+        System.out.println("Do you prefer to do another round of song import with song name? (Y/N)");
         userInput = input.nextLine();
         while (true) {
-            if (userInput.toLowerCase(Locale.ROOT).equals("n")) {
+            if (userInput.toLowerCase(Locale.ROOT).equals("y")) {
                 System.out.println("Great! Let's play again.");
                 break;
             } else if (userInput.toLowerCase(Locale.ROOT).equals("n")) {
-                System.out.println("Great! Let's jump to the main menu.");
+                System.out.println("Great! Let's jump back to the main menu.");
                 break;
             } else {
-                System.out.println("Invalid input. Please enter again.");
+                System.out.println("Invalid input. Please enter \"Y\" or \"N\"");
                 userInput = input.nextLine();
             }
         }
@@ -59,12 +58,12 @@ public class UserPrompt {
     }
 
     public String songNameRequest() {
-        System.out.println("Please enter the name of your favorite artist here, and then we will automatically fill in some details of that artist for you.");
+        System.out.println("Please enter the name of your favorite song here, and then we will automatically fill in some details of that song for you.");
         String songName = input.nextLine();
         return(songName);
     }
 
-    public String promptUserForYesOrNO() {
+    public String promptUserForYesOrNo() {
         userInput = input.nextLine();
         while (!(userInput.equalsIgnoreCase("y") || userInput.equalsIgnoreCase("n"))) {
             System.out.println("Invalid input. Please enter \"Y\" or \"N\"");

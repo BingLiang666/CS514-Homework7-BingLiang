@@ -21,7 +21,16 @@ public class AudioDB {
     protected String userInput;
     protected Scanner input = new Scanner(System.in);
 
-    public Artist insertArtistFromAudioDB(Statement statement, String artistName, Library library) {
+    public Artist insertArtistFromAudioDB(String artistName, Library library) {
+        for (Artist a: library.getArtists()) {
+            if (a.getName().equalsIgnoreCase(artistName)) {
+                System.out.println("Great! We have found the artist in the library.");
+                System.out.println("---ARTIST INFO---");
+                System.out.format("Artist Name:%-40sAudioDB_ID:%-18sArtist Style:%-10sArtist Area:%-10s\n", a.getName(), a.getAudioDB_ID(),
+                        a.getStyle(), a.getArtistArea());
+                return null;
+            }
+        }
         String requestURL = "https://www.theaudiodb.com/api/v1/json/2/search.php?s=";
         StringBuilder response = new StringBuilder();
         int id = 201 + library.getArtists().size();
@@ -39,7 +48,10 @@ public class AudioDB {
             int code = httpConnection.getResponseCode();
 
             String message = httpConnection.getResponseMessage();
-            System.out.println(code + " " + message);
+            System.out.println("Building connection to AudioDB successes: \"" + code + " " + message + "\"");
+            if (!message.equalsIgnoreCase("ok")) {
+                System.out.println("There is no record for the artist in the AudioDB.");
+            }
             if (code != HttpURLConnection.HTTP_OK) {
                 return null;
             }
@@ -71,7 +83,10 @@ public class AudioDB {
                 String artistArea = (String) requestedArtist.get("strCountry");
                 newArtist.setArtistArea(artistArea);
                 library.addArtist(newArtist);
-                //statement.executeUpdate(newArtist.toSQL());
+                System.out.println("Great! We have found that artist in AudioDB.");
+                System.out.println("---ARTIST INFO---");
+                System.out.format("Artist Name:%-40sAudioDB_ID:%-18sArtist Style:%-10sArtist Area:%-10s\n", newArtist.getName(), newArtist.getAudioDB_ID(),
+                        newArtist.getStyle(), newArtist.getArtistArea());
                 return newArtist;
             }
         } catch (ParseException e) {
@@ -80,7 +95,20 @@ public class AudioDB {
         }
     }
 
-    public Album insertAlbumFromAudioDB(Statement statement, Artist artist, String releaseDate, Library library) {
+    public Album insertAlbumFromAudioDB(Artist artist, String releaseDate, Library library) {
+        for (Album a: library.getAlbums()) {
+            if (a.getReleaseDate().substring(0,4).equalsIgnoreCase(releaseDate) && a.getArtist().getName().equalsIgnoreCase(artist.getName())) {
+                System.out.println("Great! We have found the album in the library.");
+                System.out.println("---ALBUM INFO---");
+                System.out.format("Album Name:%-40sAudioDB_ID:%-40sArtist Name:%-25sRelease Date:%-15sGenre:%-10s\n", a.getName(), a.getAudioDB_ID(),
+                        artist.getStyle(), a.getReleaseDate(), a.getAlbumGenre());
+                System.out.println("Is this album the one that you are looking for? (Y/N)");
+                if(userPrompt.promptUserForYesOrNo().equalsIgnoreCase("y")) {
+                    return null;
+                }
+                System.out.println("Okay! Then we will try to find the album for you in AudioDB.");
+            }
+        }
         String requestURL = "https://theaudiodb.com/api/v1/json/2/album.php?i=";
         StringBuilder response = new StringBuilder();
         int id = 301 + library.getAlbums().size();
@@ -100,7 +128,10 @@ public class AudioDB {
             int code = httpConnection.getResponseCode();
 
             String message = httpConnection.getResponseMessage();
-            System.out.println(code + " " + message);
+            System.out.println("Building connection to AudioDB successes: \"" + code + " " + message + "\"");
+            if (!message.equalsIgnoreCase("ok")) {
+                System.out.println("There is no album recorded for the artist in the AudioDB.");
+            }
             if (code != HttpURLConnection.HTTP_OK) {
                 return null;
             }
@@ -142,38 +173,62 @@ public class AudioDB {
                     }
                 }
                 if (duplicatedAlbums.size() > 1) {
-                    Album tempAlbum = this.selectAlbum(duplicatedAlbums);
-                    newAlbum.setAudioDB_ID(tempAlbum.getAudioDB_ID());
-                    newAlbum.setReleaseDate(tempAlbum.getReleaseDate());
-                    newAlbum.setAlbumGenre(tempAlbum.getAlbumGenre());
-                    library.addAlbum(newAlbum);
-                    //statement.executeUpdate(newAlbum.toSQL());
-                } else {
+                    Album tempAlbum = this.selectAlbum(duplicatedAlbums, artist.getName());
+                    if (tempAlbum != null) {
+                        for (Album a: library.getAlbums()) {
+                            if (a.getAudioDB_ID().equalsIgnoreCase(tempAlbum.getAudioDB_ID())) {
+                                System.out.println("The album you just chosen is already in the library.");
+                                return null;
+                            }
+                        }
+                        newAlbum.setName(tempAlbum.getName());
+                        newAlbum.setAudioDB_ID(tempAlbum.getAudioDB_ID());
+                        newAlbum.setReleaseDate(tempAlbum.getReleaseDate());
+                        newAlbum.setAlbumGenre(tempAlbum.getAlbumGenre());
+                        newAlbum.setArtist(artist);
+                        artist.addAlbum(newAlbum);
+                        library.addAlbum(newAlbum);
+                        System.out.println("Great! Album is successfully chosen.");
+                    }
+                    return null;
+                } else if (duplicatedAlbums.size() == 1){
+                    for (Album a: library.getAlbums()) {
+                        if (a.getAudioDB_ID().equalsIgnoreCase(duplicatedAlbums.get(0).getAudioDB_ID())) {
+                            System.out.println("The album you just chosen is already in the library.");
+                            return null;
+                        }
+                    }
                     newAlbum.setName(duplicatedAlbums.get(0).getName());
                     newAlbum.setAudioDB_ID(duplicatedAlbums.get(0).getAudioDB_ID());
                     newAlbum.setReleaseDate(duplicatedAlbums.get(0).getReleaseDate());
                     newAlbum.setAlbumGenre(duplicatedAlbums.get(0).getAlbumGenre());
+                    artist.addAlbum(newAlbum);
                     library.addAlbum(newAlbum);
-                    //statement.executeUpdate(newAlbum.toSQL());
+                    library.addAlbum(newAlbum);
+                    System.out.println("Great! We have found that album in AudioDB.");
+                    System.out.println("---ALBUM INFO---");
+                    System.out.format("#Album Name:%-40sAudioDB_ID:%-40sArtist Name:%-25sRelease Date:%-15sGenre:%-10s\n", newAlbum.getName(), newAlbum.getAudioDB_ID(),
+                            artist.getStyle(), newAlbum.getReleaseDate(), newAlbum.getAlbumGenre());
+                } else {
+                    System.out.println("No matched album in the AudioDB.");
+                    return null;
                 }
                 return newAlbum;
             }
         } catch (ParseException e) {
             System.out.println("Error parsing JSON");
             return null;
-        } /*catch (SQLException e) {
-            System.out.println("SQLite updates failed");
-            return null;
-        } */
+        }
     }
 
-    public Album selectAlbum(ArrayList<Album> duplicatedAlbums) {
+    public Album selectAlbum(ArrayList<Album> duplicatedAlbums, String artistName) {
         Album tempAlbum= null;
         for (int i = 0; i < duplicatedAlbums.size(); i++) {
-            System.out.format("#%-3dSong Name:%-40sMusicBrainz_ID:%-40sArtist Name:%-25sRelease Date:%-15sGenre:%-10s\n", i, duplicatedAlbums.get(i).getName(), duplicatedAlbums.get(i).getAudioDB_ID(),
-                    duplicatedAlbums.get(i).getArtist().getName(), duplicatedAlbums.get(i).getReleaseDate(), duplicatedAlbums.get(i).getAlbumGenre());
+            System.out.format("#%-3dAlbum Name:%-40sAudioDB_ID:%-40sArtist Name:%-25sRelease Date:%-15sGenre:%-10s\n", i, duplicatedAlbums.get(i).getName(), duplicatedAlbums.get(i).getAudioDB_ID(),
+                    artistName, duplicatedAlbums.get(i).getReleaseDate(), duplicatedAlbums.get(i).getAlbumGenre());
         }
-        System.out.println("Is there any album among those albums that you might want to import into the library? (Enter Y/N)");
+        System.out.println("(" + duplicatedAlbums.size() + " searching results for qualified albums in total.)");
+        System.out.println("Is there any album among those albums that you might want to import into the library? (Y/N)");
         userInput = input.nextLine();
         while (true) {
             if (userInput.toLowerCase(Locale.ROOT).equals("y")) {

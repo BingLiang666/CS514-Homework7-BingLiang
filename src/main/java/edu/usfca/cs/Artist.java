@@ -32,7 +32,7 @@ public class Artist extends Entity {
     public Artist(int ID, String name) {
         super(ID, name);
         songs = new ArrayList<>();
-        albums = new ArrayList<>();;
+        albums = new ArrayList<>();
     }
 
     public String getArtistArea() {

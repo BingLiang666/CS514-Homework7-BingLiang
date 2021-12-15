@@ -71,7 +71,7 @@ class AudioDBTest {
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
             sqLite.createSQLTables(statement);
             sqLite.initiateLibrary(statement);
-            audioDB.insertAlbumFromAudioDB(statement, artist2, releaseYear, library);
+            audioDB.insertAlbumFromAudioDB(artist2, releaseYear, library);
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         } finally {
@@ -100,7 +100,7 @@ class AudioDBTest {
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
             sqLite.createSQLTables(statement);
             sqLite.initiateLibrary(statement);
-            audioDB.insertArtistFromAudioDB(statement, artistName, library);
+            audioDB.insertArtistFromAudioDB(artistName, library);
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         } finally {

@@ -18,19 +18,19 @@ import java.util.Locale;
 import java.util.Scanner;
 
 public class SQLite {
-    Library library;
-    public String artistName;
-    public String songName;
-    public ArrayList<Song> importedSongs;
-    public ArrayList<Artist> importedArtists;
-    public ArrayList<Album> importedAlbums;
-    public Scanner input = new Scanner(System.in);
-    String userInput;
-    MusicBrainz musicBrainz = new MusicBrainz();
-    AudioDB audioDB = new AudioDB();
-    UserPrompt userPrompt;
-    Display display;
-
+    protected Library library;
+    protected String artistName;
+    protected String songName;
+    protected ArrayList<Song> importedSongs;
+    protected ArrayList<Artist> importedArtists;
+    protected ArrayList<Album> importedAlbums;
+    protected Scanner input = new Scanner(System.in);
+    protected String userInput;
+    protected MusicBrainz musicBrainz = new MusicBrainz();
+    protected AudioDB audioDB = new AudioDB();
+    protected UserPrompt userPrompt;
+    protected Display display = new Display();
+    protected IsInteger isInteger = new IsInteger();
 
     public void initiateLibrary(Statement statement) throws SQLException {
         ArrayList<Song> songs = new ArrayList<>();
@@ -48,16 +48,17 @@ public class SQLite {
     public void mainMenu() {
         Connection connection = null;
         String userInput;
+        Artist tempArtist;
+        Album tempAlbum;
 
         System.out.println("------------------------MAIN MENU------------------------");
         System.out.println("-1- Check all songs, artists, albums in the library.");
         System.out.println("-2- Check a specific part of the library.");
-        System.out.println("-3- Import a song into the library using SONG NAME only.");
-        System.out.println("-4- Import a song into the library using both SONG NAME and ARTIST NAME.");
-        System.out.println("-5- Import an artist into the library.");
-        System.out.println("-6- Import an album into the library.");
-        System.out.println("-7- Generate a playlist.");
-        System.out.println("-8- Exit.");
+        System.out.println("-3- Import a song into the library using SONG NAME.");
+        System.out.println("-4- Import an artist into the library using ARTIST NAME.");
+        System.out.println("-5- Import an album into the library using ARTIST NAME and ALBUM RELEASE DATE.");
+        System.out.println("-6- Generate a playlist.");
+        System.out.println("-7- Exit.");
         System.out.print("Your choice: ");
         userInput = this.input.nextLine();
 
@@ -86,13 +87,55 @@ public class SQLite {
                     musicBrainz.insertSongsFromMusicBrainz(statement, userInput, library);
                     this.mainMenu();
                     break;
+                case "4":
+                    System.out.println("Please enter the name of an artist here, and then we will automatically fill in details of that artist for you: ");
+                    userInput = input.nextLine();
+                    tempArtist = audioDB.insertArtistFromAudioDB(userInput, library);
+                    if (tempArtist != null) {
+                        statement.executeUpdate(tempArtist.toSQL());
+                        System.out.println("The artist \"" + tempArtist.getName() + "\" has been successfully imported into the library." );
+                    } else {
+                        System.out.println("So there is not any new artist needed to be imported this time.");
+                    }
+                    this.mainMenu();
+                    break;
+                case "5":
+                    System.out.println("Please enter the ARTIST NAME and ALBUM RELEASE DATE here, and then we will automatically fill in details of that album for you: ");
+                    System.out.print("ARTIST NAME: ");
+                    userInput = input.nextLine();
+                    tempArtist = audioDB.insertArtistFromAudioDB(userInput, library);
+                    if (tempArtist != null) {
+                        System.out.println("The artist of the album is currently not inside the library. Let's import the artist first!");
+                        statement.executeUpdate(tempArtist.toSQL());
+                        System.out.println("The artist \"" + tempArtist.getName() + "\" has been successfully imported into the library.");
+                    } else {
+                        for (Artist a: library.getArtists()) {
+                            if (a.getName().equalsIgnoreCase(userInput)) {
+                                tempArtist = a;
+                            }
+                        }
+                    }
+                    System.out.println("Now please enter the ALBUM RELEASE DATE. (Note: The number represented for year should be smaller than or equal to 2021 and in 4-digit format, eg, 2020.)");
+                    userInput = input.nextLine();
+                    while (!isInteger.isInteger(userInput)) {
+                        System.out.println("Mal-format of year you just entered. Please enter again.");
+                    }
+                    tempAlbum = audioDB.insertAlbumFromAudioDB(tempArtist, userInput, library);
+                    if (tempAlbum != null) {
+                        statement.executeUpdate(tempAlbum.toSQL());
+                        System.out.println("The album \"" + tempAlbum.getName() + "\" has been successfully imported into the library." );
+                    } else {
+                        System.out.println("So there is not any new album needed to be imported this time.");
+                    }
+                    this.mainMenu();
+                    break;
                 default:
                     System.out.println("Invalid input. Please enter a number from 1~8.");
                     this.mainMenu();
                     break;
             }
             this.artistNameRequest();
-            audioDB.insertArtistFromAudioDB(statement, this.artistName, library);
+            audioDB.insertArtistFromAudioDB(this.artistName, library);
 
             display.displaySongs(this.library.getSongs());
             display.displayArtists(this.library.getArtists());

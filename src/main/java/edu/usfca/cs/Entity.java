@@ -4,14 +4,12 @@ import java.util.Date;
 
 public class Entity {
     protected String name;
-    protected static int counter = 0;
     protected int entityID;
     protected Date dateCreated;
 
     public Entity() {
         this.name = "";
-        counter++;
-        this.entityID = counter;
+        this.entityID = -1;
         dateCreated = new Date();
     }
 
@@ -28,8 +26,7 @@ public class Entity {
 
     public Entity(String name) {
         this.name = name;
-        counter++;
-        this.entityID = counter;
+        this.entityID = -1;
         dateCreated = new Date();
     }
 
