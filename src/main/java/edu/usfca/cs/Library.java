@@ -8,8 +8,6 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.*;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -18,6 +16,8 @@ public class Library {
     private ArrayList<Song> songs;
     private ArrayList<Artist> artists;
     private ArrayList<Album> albums;
+    private boolean isArtistAlreadyInLibrary;
+    private boolean isAlbumAlreadyInLibrary;
 
 
     /**
@@ -122,6 +122,22 @@ public class Library {
         albums.add(album);
     }
 
+    public boolean isArtistAlreadyInLibrary() {
+        return isArtistAlreadyInLibrary;
+    }
+
+    public void setArtistAlreadyInLibrary(boolean artistAlreadyInLibrary) {
+        isArtistAlreadyInLibrary = artistAlreadyInLibrary;
+    }
+
+    public boolean isAlbumAlreadyInLibrary() {
+        return isAlbumAlreadyInLibrary;
+    }
+
+    public void setAlbumAlreadyInLibrary(boolean albumAlreadyInLibrary) {
+        isAlbumAlreadyInLibrary = albumAlreadyInLibrary;
+    }
+
     /**
      *
      * @param song new song needs to be checked
@@ -175,6 +191,14 @@ public class Library {
         return "noDuplicatedSong";
     }
 
+    /**
+     *
+     * @param n Node
+     * @return content of XML node
+     *
+     * This returns the content of certain XML node.
+     *
+     */
     public static String getContent(Node n) {
         StringBuilder sb = new StringBuilder();
         Node child = n.getFirstChild();
@@ -182,6 +206,13 @@ public class Library {
         return sb.toString();
     }
 
+    /**
+     *
+     * @param filename file name
+     *
+     * This creates song, artist, and album objects from XML and fill them into the library.
+     *
+     */
     public void readInMusicFromXML(String filename) {
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -206,6 +237,13 @@ public class Library {
         }
     }
 
+    /**
+     *
+     * @param songNodes arrayList of XML song nodes
+     *
+     * This creates song objects from XML song nodes.
+     *
+     */
     public void readInSongFromXML(NodeList songNodes) {
         Node currentNode, subNode;
         Song currentSong;
@@ -233,6 +271,14 @@ public class Library {
         }
     }
 
+    /**
+     *
+     * @param artistNodes arrayList of XML song nodes
+     * @return
+     *
+     * This creates artist objects from XML artist nodes.
+     *
+     */
     public ArrayList readInArtistFromXML(NodeList artistNodes) {
         Node currentNode, subNode;
         Artist currentArtist;
@@ -261,6 +307,14 @@ public class Library {
         return artists;
     }
 
+    /**
+     *
+     * @param albumNodes arrayList of XML album nodes
+     * @return
+     *
+     * This creates album objects from XML album nodes.
+     *
+     */
     public ArrayList readInAlbumFromXML(NodeList albumNodes) {
         Node currentNode, subNode;
         Album currentAlbum;
@@ -289,6 +343,13 @@ public class Library {
         return albums;
     }
 
+    /**
+     *
+     * @param songNodes XML song nodes
+     *
+     * This fills all songs, artists and albums into the library.
+     *
+     */
     public void fillInLibraryFromXML(NodeList songNodes) {
         Node currentNode, subNode;
         int artistID;
@@ -328,6 +389,9 @@ public class Library {
         }
     }
 
+    /**
+     *  This creates an XML file for the library.
+     */
     public void writingXMLForLibrary() {
         try {
             File inputFile = new File("MusicLibrary_TEST.xml");
@@ -360,6 +424,9 @@ public class Library {
         }
     }
 
+    /**
+     * This creates a JSON file for the library.
+     */
     public void writingJSONForLibrary() {
         try {
             File inputFile = new File("MusicLibrary_TEST.json");
@@ -404,50 +471,6 @@ public class Library {
             w.close();
         } catch (IOException e) {
             System.err.println("Problem writing to the file MusicLibrary_TEST.json");
-        }
-    }
-
-    public void lookUpMusicBrainzForAliasesOfArtist(Artist artist) {
-
-        String initialURL = "https://musicbrainz.org/ws/2/artist" + artist.getName() + "?query=beatles&fmt=xml";
-        /* MusicBrainz gives each element in their DB a unique ID, called an MBID. We'll use this to fetch that. */
-
-        /* now let's parse the XML.  */
-        try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            URLConnection u = new URL(initialURL).openConnection();
-            /* MusicBrainz asks to have a user agent string set. This way they can contact you if there's an
-             * issue, and they won't block your IP. */
-            u.setRequestProperty("User-Agent", "Application ExampleParser/1.0 (bliang11@dons.usfca.edu");
-
-            Document doc = db.parse(u.getInputStream());
-            /* let's get the artist-list node */
-            NodeList artists = doc.getElementsByTagName("artist-list");
-            /* let's assume that the one we want is first. */
-            Node beatlesNode = artists.item(0).getFirstChild();
-            Node beatlesIDNode = beatlesNode.getAttributes().getNamedItem("id");
-            String id = beatlesIDNode.getNodeValue();
-            System.out.println(id);
-
-            /* Now let's use that ID to get info specifically about this artist. */
-
-            String lookupURL = "https://musicbrainz.org/ws/2/artist/" + id + "?inc=aliases";
-            // debug helper
-            System.out.println();
-            URLConnection u2 = new URL(lookupURL).openConnection();
-            u2.setRequestProperty("User-Agent", "Application ExampleParser/1.0 (bliang11@dons.usfca.edu");
-
-            db = dbf.newDocumentBuilder();
-            doc = db.parse(u2.getInputStream());
-            /* let's get all the aliases. */
-            NodeList aliases = doc.getElementsByTagName("alias");
-            for (int i = 0; i < aliases.getLength(); i++) {
-                System.out.println(aliases.item(i).getFirstChild().getNodeValue());
-            }
-
-        } catch (Exception ex) {
-            System.out.println("XML parsing error" + ex);
         }
     }
 }

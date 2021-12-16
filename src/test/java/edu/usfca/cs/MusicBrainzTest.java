@@ -32,6 +32,7 @@ class MusicBrainzTest {
         albums = new ArrayList<>();
         connection = null;
         musicBrainz = new MusicBrainz();
+        response = new StringBuilder();
         song1 = new Song(101, "happy birthday");
         song2 = new Song(102, "good day");
         artist1 = new Artist(201, "adele");
@@ -84,6 +85,6 @@ class MusicBrainzTest {
     void testGrabSongs() {
         String songName = "red";
         musicBrainz.buildConnectionWithMusicBrainz(songName, response);
-        musicBrainz.grabSongs(statement, response, songName, songs, library);
+        musicBrainz.grabSongs(response, songName, songs, library);
     }
 }

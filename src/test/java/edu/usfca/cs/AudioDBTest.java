@@ -42,6 +42,10 @@ class AudioDBTest {
         artist2.setAudioDB_ID("135856");
         album1 = new Album(301, "little prince");
         album2 = new Album(302, "little princess");
+        album1.setAudioDB_ID("127639");
+        album2.setAudioDB_ID("129873");
+        album1.setReleaseDate("2000");
+        album2.setReleaseDate("2001");
         song1.setPerformer(artist1);
         song2.setPerformer(artist2);
         song1.setAlbum(album1);
@@ -79,7 +83,6 @@ class AudioDBTest {
                 if (connection != null)
                     connection.close();
             } catch (SQLException e) {
-                // connection close failed.
                 System.err.println(e.getMessage());
             }
         }

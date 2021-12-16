@@ -11,7 +11,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
@@ -21,19 +20,36 @@ public class AudioDB {
     protected String userInput;
     protected Scanner input = new Scanner(System.in);
 
+    /**
+     *
+     * @param artistName artist name
+     * @param library music library
+     * @return artist / null
+     *
+     * This finds an artist in the current library as well as AudioDB and automatically fill in missing details of that song based on artist name.
+     * This returns an artist object if there is one that has been found, otherwise returns null.
+     * PLEASE NOTE: If the artist already exists in the library, then this also returns null.
+     *
+     */
     public Artist insertArtistFromAudioDB(String artistName, Library library) {
         for (Artist a: library.getArtists()) {
             if (a.getName().equalsIgnoreCase(artistName)) {
                 System.out.println("Great! We have found the artist in the library.");
                 System.out.println("---ARTIST INFO---");
-                System.out.format("Artist Name:%-40sAudioDB_ID:%-18sArtist Style:%-10sArtist Area:%-10s\n", a.getName(), a.getAudioDB_ID(),
+                System.out.format("Artist Name:%-40sAudioDB_ID:%-18sArtist Style:%-18sArtist Area:%-10s\n", a.getName(), a.getAudioDB_ID(),
                         a.getStyle(), a.getArtistArea());
+
                 return null;
             }
         }
         String requestURL = "https://www.theaudiodb.com/api/v1/json/2/search.php?s=";
         StringBuilder response = new StringBuilder();
-        int id = 201 + library.getArtists().size();
+        int id;
+        if (library.getArtists().size() == 0) {           // set the entityID for the first artist to be 201
+            id = 201;
+        } else {
+            id = 1 + library.getArtists().get(library.getArtists().size() - 1).getEntityID(); // set the entityID of this new artist to be 1 greater the current last artist in the library
+        }
         Artist newArtist = new Artist(id, artistName);
         URL u;
         try {
@@ -85,7 +101,7 @@ public class AudioDB {
                 library.addArtist(newArtist);
                 System.out.println("Great! We have found that artist in AudioDB.");
                 System.out.println("---ARTIST INFO---");
-                System.out.format("Artist Name:%-40sAudioDB_ID:%-18sArtist Style:%-10sArtist Area:%-10s\n", newArtist.getName(), newArtist.getAudioDB_ID(),
+                System.out.format("Artist Name:%-40sAudioDB_ID:%-18sArtist Style:%-18sArtist Area:%-10s\n", newArtist.getName(), newArtist.getAudioDB_ID(),
                         newArtist.getStyle(), newArtist.getArtistArea());
                 return newArtist;
             }
@@ -95,15 +111,28 @@ public class AudioDB {
         }
     }
 
+    /**
+     *
+     * @param artist artist
+     * @param releaseDate album release date
+     * @param library music library
+     * @return album / null
+     *
+     * This finds an album in the current library as well as AudioDB and automatically fill in missing details of that song based on the artist name and album release date.
+     * This returns an album object if there is one that has been found, otherwise returns false.
+     * PLEASE NOTE: If the album already exists in the library, then this also returns null.
+     *
+     */
     public Album insertAlbumFromAudioDB(Artist artist, String releaseDate, Library library) {
         for (Album a: library.getAlbums()) {
-            if (a.getReleaseDate().substring(0,4).equalsIgnoreCase(releaseDate) && a.getArtist().getName().equalsIgnoreCase(artist.getName())) {
+            if (a.getReleaseDate().substring(0, 4).equals(releaseDate) && a.getArtist().getName().equalsIgnoreCase(artist.getName())) {
                 System.out.println("Great! We have found the album in the library.");
                 System.out.println("---ALBUM INFO---");
-                System.out.format("Album Name:%-40sAudioDB_ID:%-40sArtist Name:%-25sRelease Date:%-15sGenre:%-10s\n", a.getName(), a.getAudioDB_ID(),
-                        artist.getStyle(), a.getReleaseDate(), a.getAlbumGenre());
+                System.out.format("Album Name:%-40sAudioDB_ID:%-18sArtist Name:%-25sRelease Date:%-15sGenre:%-10s\n", a.getName(), a.getAudioDB_ID(),
+                        artist.getName(), a.getReleaseDate(), a.getAlbumGenre());
                 System.out.println("Is this album the one that you are looking for? (Y/N)");
                 if(userPrompt.promptUserForYesOrNo().equalsIgnoreCase("y")) {
+                    library.setAlbumAlreadyInLibrary(true);
                     return null;
                 }
                 System.out.println("Okay! Then we will try to find the album for you in AudioDB.");
@@ -111,7 +140,12 @@ public class AudioDB {
         }
         String requestURL = "https://theaudiodb.com/api/v1/json/2/album.php?i=";
         StringBuilder response = new StringBuilder();
-        int id = 301 + library.getAlbums().size();
+        int id;
+        if (library.getArtists().size() == 0) {           // set the entityID for the first album to be 301
+            id = 301;
+        } else {
+            id = 1 + library.getAlbums().get(library.getAlbums().size() - 1).getEntityID();  // set the entityID of this new album to be 1 greater the current last album in the library
+        }
         Album newAlbum = new Album(id);
         newAlbum.setArtist(artist);
         ArrayList<Album> duplicatedAlbums = new ArrayList<>();
@@ -157,7 +191,7 @@ public class AudioDB {
                 for (int i = 0; i < numberOfAlbums; i++) {
                     JSONObject requestedArtist = (JSONObject) albums.get(i);
                     String releaseYear = (String) requestedArtist.get("intYearReleased");
-                    if (releaseYear.equals(releaseDate.substring(0,4))) {             // if the release year matches, then this album is possibly what we are looking for
+                    if (releaseYear.substring(0,4).equals(releaseDate)) {             // if the release year matches, then this album is possibly what we are looking for
                         Album tempAlbum = new Album();
                         tempAlbum.setReleaseDate(releaseYear);
                         String AudioDB_ID = (String) requestedArtist.get("idAlbum");
@@ -178,6 +212,7 @@ public class AudioDB {
                         for (Album a: library.getAlbums()) {
                             if (a.getAudioDB_ID().equalsIgnoreCase(tempAlbum.getAudioDB_ID())) {
                                 System.out.println("The album you just chosen is already in the library.");
+                                library.setAlbumAlreadyInLibrary(true);
                                 return null;
                             }
                         }
@@ -189,12 +224,14 @@ public class AudioDB {
                         artist.addAlbum(newAlbum);
                         library.addAlbum(newAlbum);
                         System.out.println("Great! Album is successfully chosen.");
+                    } else {
+
                     }
-                    return null;
                 } else if (duplicatedAlbums.size() == 1){
                     for (Album a: library.getAlbums()) {
                         if (a.getAudioDB_ID().equalsIgnoreCase(duplicatedAlbums.get(0).getAudioDB_ID())) {
                             System.out.println("The album you just chosen is already in the library.");
+                            library.setAlbumAlreadyInLibrary(true);
                             return null;
                         }
                     }
@@ -203,12 +240,12 @@ public class AudioDB {
                     newAlbum.setReleaseDate(duplicatedAlbums.get(0).getReleaseDate());
                     newAlbum.setAlbumGenre(duplicatedAlbums.get(0).getAlbumGenre());
                     artist.addAlbum(newAlbum);
-                    library.addAlbum(newAlbum);
+                    newAlbum.setArtist(artist);
                     library.addAlbum(newAlbum);
                     System.out.println("Great! We have found that album in AudioDB.");
                     System.out.println("---ALBUM INFO---");
-                    System.out.format("#Album Name:%-40sAudioDB_ID:%-40sArtist Name:%-25sRelease Date:%-15sGenre:%-10s\n", newAlbum.getName(), newAlbum.getAudioDB_ID(),
-                            artist.getStyle(), newAlbum.getReleaseDate(), newAlbum.getAlbumGenre());
+                    System.out.format("#Album Name:%-40sAudioDB_ID:%-18sArtist Name:%-25sRelease Date:%-15sGenre:%-10s\n", newAlbum.getName(), newAlbum.getAudioDB_ID(),
+                            artist.getName(), newAlbum.getReleaseDate(), newAlbum.getAlbumGenre());
                 } else {
                     System.out.println("No matched album in the AudioDB.");
                     return null;
@@ -221,10 +258,20 @@ public class AudioDB {
         }
     }
 
+    /**
+     *
+     * @param duplicatedAlbums arrayList of albums
+     * @param artistName artist name
+     * @return album / null
+     *
+     * This shows at most 5 qualified albums found in AudioDB to users and let users decide which one they want to keep
+     * This return an album object if users chose one, otherwise returns null.
+     *
+     */
     public Album selectAlbum(ArrayList<Album> duplicatedAlbums, String artistName) {
         Album tempAlbum= null;
         for (int i = 0; i < duplicatedAlbums.size(); i++) {
-            System.out.format("#%-3dAlbum Name:%-40sAudioDB_ID:%-40sArtist Name:%-25sRelease Date:%-15sGenre:%-10s\n", i, duplicatedAlbums.get(i).getName(), duplicatedAlbums.get(i).getAudioDB_ID(),
+            System.out.format("#%-3dAlbum Name:%-40sAudioDB_ID:%-18sArtist Name:%-25sRelease Date:%-15sGenre:%-10s\n", i, duplicatedAlbums.get(i).getName(), duplicatedAlbums.get(i).getAudioDB_ID(),
                     artistName, duplicatedAlbums.get(i).getReleaseDate(), duplicatedAlbums.get(i).getAlbumGenre());
         }
         System.out.println("(" + duplicatedAlbums.size() + " searching results for qualified albums in total.)");
@@ -264,7 +311,7 @@ public class AudioDB {
                 System.out.println("Gotcha!");
                 break;
             } else {
-                System.out.println("Invalid input. Please enter again.");
+                System.out.println("Invalid input. Please enter \"Y\" or \"N\".");
                 userInput = input.nextLine();
             }
         }

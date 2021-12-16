@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PlaylistTest {
+class UserPromptTest {
     Playlist myPlaylist;
     Song s1, s2;
     UserPrompt userPrompt = new UserPrompt();
@@ -22,23 +22,7 @@ class PlaylistTest {
     }
 
     @Test
-    void addSong() {
-        myPlaylist.addSong(s1);
-        assertTrue(myPlaylist.getListOfSongs().contains(s1));
-        assertFalse(myPlaylist.getListOfSongs().contains(s2));
-    }
-
-    private void assertTrue(boolean contains) {
-    }
-
-    @Test
-    void deleteSong() {
-        myPlaylist.deleteSong(s1);
-        assertFalse(myPlaylist.getListOfSongs().contains(s1));
-    }
-
-    @Test
-    void generatePlaylistByLikes() {
+    void promptUserForLikes() {
         String data = "5\r\n";
         InputStream stdin = System.in;
         try {

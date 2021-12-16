@@ -5,23 +5,35 @@ import java.util.Locale;
 import java.util.Scanner;
 
 public class Display {
-    protected UserPrompt userPrompt;
+    protected UserPrompt userPrompt = new UserPrompt();
     protected Scanner input = new Scanner(System.in);
     protected String userInput;
-    public SQLite sqLite;
     protected IsInteger isInteger = new IsInteger();
 
-
+    /**
+     *
+     * @param songs arrayList of songs
+     *
+     * This displays all songs in an arrayList in a formatted way.
+     *
+     */
     public void displaySongs(ArrayList<Song> songs) {
         System.out.println("--------------------------------------------------------------SONGS--------------------------------------------------------------");
-        System.out.format("%-3s | %-25s | %-36s | %-8s | %-8s | %-10s | %-16s | %s\n", "id", "name", "MusicBrainz_ID", "artistID",
-                "albumID", "songGenre", "songReleaseDate", "songLanguage");
+        System.out.format("%-3s | %-25s | %-36s | %-8s | %-8s | %-16s | %s\n", "id", "name", "MusicBrainz_ID", "artistID",
+                "albumID", "songReleaseDate", "songLanguage");
         for (Song s: songs) {
-            System.out.printf("%-3s | %-25s | %-36s | %-8s | %-8s | %-10s | %-16s | %s\n", s.getEntityID(), s.getName(), s.getMusicBrainzID(),
-                    s.getPerformer().getEntityID(), s.getAlbum().getEntityID(), s.getGenre(), s.getSongReleaseDate(), s.getSongLanguage());
+            System.out.printf("%-3s | %-25s | %-36s | %-8s | %-8s | %-16s | %s\n", s.getEntityID(), s.getName(), s.getMusicBrainzID(),
+                    s.getPerformer().getEntityID(), s.getAlbum().getEntityID(), s.getSongReleaseDate(), s.getSongLanguage());
         }
     }
 
+    /**
+     *
+     * @param artists arrayList of artists
+     *
+     * This displays all artists in an arrayList in a formatted way.
+     *
+     */
     public void displayArtists(ArrayList<Artist> artists) {
         System.out.println("--------------------------------------------------------------ARTISTS--------------------------------------------------------------");
         System.out.format("%-3s | %-25s | %-10s | %-8s | %-8s | %-10s | %-12s | %s\n", "id", "name", "AudioDB_ID", "nAlbums",
@@ -32,6 +44,13 @@ public class Display {
         }
     }
 
+    /**
+     *
+     * @param albums arrayList of albums
+     *
+     * This displays all albums in an arrayList in a formatted way.
+     *
+     */
     public void displayAlbums(ArrayList<Album> albums) {
         System.out.println("--------------------------------------------------------------ALBUMS--------------------------------------------------------------");
         System.out.format("%-3s | %-28s | %-10s | %-8s | %-8s | %-18s | %s\n", "id", "name", "AudioDB_ID",
@@ -42,38 +61,59 @@ public class Display {
         }
     }
 
+    /**
+     *
+     * @param library music library
+     *
+     * This prompts users to choose things needed to be displayed when they want to see a part of library.
+     *
+     */
     public void displayPartOfLibrary(Library library) {
-        System.out.println("What kind of information would you prefer to see?(Please enter 1, 2, 3, or 4.)");
+        System.out.println("What kind of information would you prefer to see?(Please enter 1, 2, or 3.)");
         System.out.println("-1- Song");
         System.out.println("-2- Artist");
         System.out.println("-3- Album");
-        System.out.println("-4- Back to main menu.");
         userInput = input.nextLine();
         switch (userInput) {
             case "1":
                 this.displayPartOfSongsInLibrary(library);
+                break;
             case "2":
                 this.displayPartOfArtistsInLibrary(library);
+                break;
             case "3":
                 this.displayPartOfAlbumsInLibrary(library);
-            case "4":
-                sqLite.mainMenu();
+                break;
+            default:
+                System.out.println("Invalid input. Please enter a number from 1~3.");
+                this.displayPartOfLibrary(library);
+                break;
         }
     }
 
+    /**
+     *
+     * @param library music library
+     *
+     * This prompts users to choose which songs needed to be displayed when they want to see some of them.
+     *
+     */
     public void displayPartOfSongsInLibrary(Library library) {
         System.out.println("What kind of songs would you prefer to see?(Please enter 1, 2, or 3.)");
-        System.out.println("-1- Songs after certain year.");
-        System.out.println("-2- Songs from certain artist.");
-        System.out.println("-3- Songs from certain album.");
+        System.out.println("-1- Songs After Certain Year.");
+        System.out.println("-2- Songs From Certain Artist.");
+        System.out.println("-3- Songs From Certain Album.");
         userInput = input.nextLine();
         switch (userInput) {
             case "1":
-                this.displaySongsAfterCertainYear(library);
+                this.displaySongsAfterCertainYear(library, input);
+                break;
             case "2":
                 this.displaySongsFromCertainArtist(library);
+                break;
             case "3":
                 this.displaySongsFromCertainAlbum(library);
+                break;
             default:
                 System.out.println("Invalid input. Please enter a number from 1~3.");
                 this.displayPartOfSongsInLibrary(library);
@@ -81,41 +121,44 @@ public class Display {
         }
     }
 
-    public void displaySongsAfterCertainYear(Library library) {
-        System.out.println("Please enter that year. (Note: The number represented for year should be smaller than or equal to 2021 and in 4-digit format, eg, 2020.)");
-        userInput = input.nextLine();
-        int year;
-        while (true) {
-            if (isInteger.isInteger(userInput)) {
-                year = Integer.parseInt(userInput);
-                if (year <= 2021) {
-                    break;
-                }
-            } else {
-                System.out.println("Mal-format of year you just entered. Please enter again.");
-                userInput = input.nextLine();
-            }
-        }
+    /**
+     *
+     * @param library music library
+     * @param input scanner from keyboard
+     *
+     * This prompts users to enter a certain year and displays songs stored in the library that were released after that year.
+     *
+     */
+    public void displaySongsAfterCertainYear(Library library, Scanner input) {
+        System.out.println("Please enter that year.");
+        int year = userPrompt.requestForYear(input);
         this.songsFromCertainYear(library, year);
         this.requestForAnotherSearch(library);
-        sqLite.mainMenu();
     }
 
+    /**
+     *
+     * @param library music library
+     * @param year year entered by users
+     *
+     * This displays qualified songs that were released after certain year.
+     *
+     */
     public void songsFromCertainYear(Library library, int year) {
         int index = 0;
         System.out.println("--------------------------------------------------------------Searching Results--------------------------------------------------------------");
-        System.out.format("%-3s | %-25s | %-36s | %-8s | %-8s | %-10s | %-16s | %s\n", "id", "name", "MusicBrainz_ID", "artistID",
-                "albumID", "songGenre", "songReleaseDate", "songLanguage");
+        System.out.format("%-3s | %-25s | %-36s | %-8s | %-8s | %-16s | %s\n", "id", "name", "MusicBrainz_ID", "artistID",
+                "albumID", "songReleaseDate", "songLanguage");
         for(Song s: library.getSongs()) {
             String yearOfSong = s.getSongReleaseDate().substring(0,4);
             if (Integer.parseInt(yearOfSong) >= year) {
-                System.out.printf("%-3s | %-25s | %-36s | %-8s | %-8s | %-10s | %-16s | %s\n", s.getEntityID(), s.getName(), s.getMusicBrainzID(),
-                        s.getPerformer().getEntityID(), s.getAlbum().getEntityID(), s.getGenre(), s.getSongReleaseDate(), s.getSongLanguage());
+                System.out.printf("%-3s | %-25s | %-36s | %-8s | %-8s | %-16s | %s\n", s.getEntityID(), s.getName(), s.getMusicBrainzID(),
+                        s.getPerformer().getEntityID(), s.getAlbum().getEntityID(), s.getSongReleaseDate(), s.getSongLanguage());
                 index++;
             }
         }
         if (index == 0) {
-            System.out.println("No qualified artists in the current database. You can add such artists later.");
+            System.out.println("No qualified songs in the current database. You can add such songs later.");
         } else if (index == 1){
             System.out.println("(1 result in total)");
         } else {
@@ -123,58 +166,77 @@ public class Display {
         }
     }
 
+    /**
+     *
+     * @param library music library
+     *
+     * This displays qualified songs owned by certain artist.
+     *
+     */
     public void displaySongsFromCertainArtist (Library library) {
-        System.out.println("Please enter the last name of an artist.");
+        System.out.println("Please enter the name of an artist.");
         userInput = input.nextLine();
         int index = 0;
         System.out.println("--------------------------------------------------------------Searching Results--------------------------------------------------------------");
-        System.out.format("%-3s | %-25s | %-36s | %-8s | %-8s | %-10s | %-16s | %s\n", "id", "name", "MusicBrainz_ID", "artistID",
-                "albumID", "songGenre", "songReleaseDate", "songLanguage");
+        System.out.format("%-3s | %-25s | %-36s | %-8s | %-8s | %-16s | %s\n", "id", "name", "MusicBrainz_ID", "artistID",
+                "albumID", "songReleaseDate", "songLanguage");
         for(Song s: library.getSongs()) {
             String artistName = s.getPerformer().getName().toLowerCase(Locale.ROOT);
             if (artistName.contains(userInput.toLowerCase(Locale.ROOT))) {
-                System.out.printf("%-3s | %-25s | %-36s | %-8s | %-8s | %-10s | %-16s | %s\n", s.getEntityID(), s.getName(), s.getMusicBrainzID(),
-                        s.getPerformer().getEntityID(), s.getAlbum().getEntityID(), s.getGenre(), s.getSongReleaseDate(), s.getSongLanguage());
+                System.out.printf("%-3s | %-25s | %-36s | %-8s | %-8s | %-16s | %s\n", s.getEntityID(), s.getName(), s.getMusicBrainzID(),
+                        s.getPerformer().getEntityID(), s.getAlbum().getEntityID(), s.getSongReleaseDate(), s.getSongLanguage());
                 index++;
             }
         }
         if (index == 0) {
-            System.out.println("No qualified artists in the current database. You can add such artists later.");
+            System.out.println("No qualified songs in the current database. You can add such songs later.");
         } else if (index == 1){
             System.out.println("(1 result in total)");
         } else {
             System.out.println("(" + index + " results in total)");
         }
         this.requestForAnotherSearch(library);
-        sqLite.mainMenu();
     }
 
+    /**
+     *
+     * @param library music library
+     *
+     * This displays qualified songs that are stored in certain album.
+     *
+     */
     public void displaySongsFromCertainAlbum(Library library) {
         System.out.println("Please enter the name of an album.");
         userInput = input.nextLine();
         int index = 0;
         System.out.println("--------------------------------------------------------------Searching Results--------------------------------------------------------------");
-        System.out.format("%-3s | %-25s | %-36s | %-8s | %-8s | %-10s | %-16s | %s\n", "id", "name", "MusicBrainz_ID", "artistID",
-                "albumID", "songGenre", "songReleaseDate", "songLanguage");
+        System.out.format("%-3s | %-25s | %-36s | %-8s | %-8s | %-16s | %s\n", "id", "name", "MusicBrainz_ID", "artistID",
+                "albumID", "songReleaseDate", "songLanguage");
         for(Song s: library.getSongs()) {
             String albumName = s.getAlbum().getName().toLowerCase(Locale.ROOT);
             if (albumName.contains(userInput.toLowerCase(Locale.ROOT))) {
-                System.out.printf("%-3s | %-25s | %-36s | %-8s | %-8s | %-10s | %-16s | %s\n", s.getEntityID(), s.getName(), s.getMusicBrainzID(),
-                        s.getPerformer().getEntityID(), s.getAlbum().getEntityID(), s.getGenre(), s.getSongReleaseDate(), s.getSongLanguage());
+                System.out.printf("%-3s | %-25s | %-36s | %-8s | %-8s | %-16s | %s\n", s.getEntityID(), s.getName(), s.getMusicBrainzID(),
+                        s.getPerformer().getEntityID(), s.getAlbum().getEntityID(), s.getSongReleaseDate(), s.getSongLanguage());
                 index++;
             }
         }
         if (index == 0) {
-            System.out.println("No qualified artists in the current database. You can add such artists later.");
+            System.out.println("No qualified songs in the current database. You can add such songs later.");
         } else if (index == 1){
             System.out.println("(1 result in total)");
         } else {
             System.out.println("(" + index + " results in total)");
         }
         this.requestForAnotherSearch(library);
-        sqLite.mainMenu();
     }
 
+    /**
+     *
+     * @param library music library
+     *
+     * This prompts users to choose which artists needed to be displayed when they want to see some of them.
+     *
+     */
     public void displayPartOfArtistsInLibrary(Library library) {
         System.out.println("What kind of artists would you prefer to see?(Please enter 1 or 2.)");
         System.out.println("-1- Artists with certain style.");
@@ -183,8 +245,10 @@ public class Display {
         switch (userInput) {
             case "1":
                 this.displayArtistsWithCertainStyle(library);
+                break;
             case "2":
                 this.displayArtistsFromCertainArea(library);
+                break;
             default:
                 System.out.println("Invalid input. Please enter a number from 1~2.");
                 this.displayPartOfArtistsInLibrary(library);
@@ -192,8 +256,15 @@ public class Display {
         }
     }
 
+    /**
+     *
+     * @param library music library
+     *
+     * This displays qualified artists who are in certain styles.
+     *
+     */
     public void displayArtistsWithCertainStyle(Library library) {
-        System.out.println("Please enter the style.");
+        System.out.println("Please enter the artist style.(ex. pop/rock/urban/R&B...)");
         userInput = input.nextLine();
         int index = 0;
         System.out.println("--------------------------------------------------------------Searching Results--------------------------------------------------------------");
@@ -215,9 +286,15 @@ public class Display {
             System.out.println("(" + index + " results in total)");
         }
         this.requestForAnotherSearch(library);
-        sqLite.mainMenu();
     }
 
+    /**
+     *
+     * @param library music library
+     *
+     * This displays qualified artists who are from certain area.
+     *
+     */
     public void displayArtistsFromCertainArea(Library library) {
         System.out.println("Please enter the area name.(ex. USA/UK...)");
         userInput = input.nextLine();
@@ -248,9 +325,15 @@ public class Display {
             System.out.println("(" + index + " results in total)");
         }
         this.requestForAnotherSearch(library);
-        sqLite.mainMenu();
     }
 
+    /**
+     *
+     * @param library music library
+     *
+     * This prompts users to choose which albums needed to be displayed when they want to see some of them.
+     *
+     */
     public void displayPartOfAlbumsInLibrary(Library library) {
         System.out.println("What kind of albums would you prefer to see?(Please enter 1 or 2.)");
         System.out.println("-1- Albums from certain artists.");
@@ -259,17 +342,26 @@ public class Display {
         switch (userInput) {
             case "1":
                 this.displayAlbumsFromCertainArtists(library);
+                break;
             case "2":
                 this.displayAlbumsInCertainGenre(library);
+                break;
             default:
                 System.out.println("Invalid input. Please enter a number from 1~2.");
-                this.displayPartOfArtistsInLibrary(library);
-                userInput = input.nextLine();
+                this.displayPartOfAlbumsInLibrary(library);
+                //userInput = input.nextLine();
         }
     }
 
+    /**
+     *
+     * @param library music library
+     *
+     * This displays qualified albums owned by certain artist.
+     *
+     */
     public void displayAlbumsFromCertainArtists(Library library) {
-        System.out.println("Please enter the last name of an artist.");
+        System.out.println("Please enter the name of an artist.");
         userInput = input.nextLine();
         int index = 0;
         System.out.println("--------------------------------------------------------------Searching Results--------------------------------------------------------------");
@@ -291,11 +383,17 @@ public class Display {
             System.out.println("(" + index + " results in total)");
         }
         this.requestForAnotherSearch(library);
-        sqLite.mainMenu();
     }
 
+    /**
+     *
+     * @param library music library
+     *
+     * This displays qualified albums that are in certain genre.
+     *
+     */
     public void displayAlbumsInCertainGenre(Library library) {
-        System.out.println("Please enter the last name of an artist.");
+        System.out.println("Please enter the music genre.(ex. pop/soul/rock...)");
         userInput = input.nextLine();
         int index = 0;
         System.out.println("--------------------------------------------------------------Searching Results--------------------------------------------------------------");
@@ -317,17 +415,23 @@ public class Display {
             System.out.println("(" + index + " results in total)");
         }
         this.requestForAnotherSearch(library);
-        sqLite.mainMenu();
     }
 
+    /**
+     *
+     * @param library music library
+     *
+     * This prompts users if they want to do another round of search.
+     *
+     */
     public void requestForAnotherSearch(Library library) {
-        System.out.println("Do you prefer to do another round of search? (Please enter Y/N)");
+        System.out.println("Do you prefer another round of search? (Y/N)");
         String userChoice = input.nextLine();
         while (true) {
-            if (userChoice.toLowerCase(Locale.ROOT).equals("y")) {
+            if (userChoice.equalsIgnoreCase("y")) {
                 this.displayPartOfLibrary(library);
-            } else if (userChoice.toLowerCase(Locale.ROOT).equals("n")) {
-                System.out.println("Great! Let's jump to the main menu.");
+            } else if (userChoice.equalsIgnoreCase("n")) {
+                System.out.println("Great! Let's jump back to the main menu.");
                 break;
             } else {
                 System.out.println("Invalid input. Please enter again.");
