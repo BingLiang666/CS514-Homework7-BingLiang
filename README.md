@@ -101,7 +101,7 @@ The followings are instructions of how to use all the functions of Music Garden:
     1) Choose -3- in the Main Menu.
     2) Enter the song's name that we want to import.
     3) If there is duplicated song in the database, we will be prompted to indicate whether the new song should be imported or not. 
-    (NOTE: A song will be imported only if there are correct artist and album linked with it.)
+    (NOTE: A song will be imported only if there are correct artist and album linked with it!)
      
   2.2 Import An Artist Into The Library Using ARTIST NAME  
   
@@ -114,6 +114,7 @@ The followings are instructions of how to use all the functions of Music Garden:
     1) Choose -5- in the Main Menu.
     2) Enter the name of the artist who owns the album that we want to import.
     3) If the artist is in the database, then enter an integer in valid format representing the release year.
+    4) If the album is already in the database or could not be found in the AudioDB, the album will not be imported.
      
 ## 3. Playlist
 
