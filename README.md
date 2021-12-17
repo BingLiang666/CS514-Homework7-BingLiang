@@ -32,7 +32,7 @@ Once the program is running, we will see the following interface in the console:
 
 The followings are detailed descriptions of its functions and how to use them:
 
-## 1. Diplay
+## 1. Display
 
    1.1 Display the whole database(i.e. songs, artists and albums)
    
