@@ -11,7 +11,7 @@ public class SQLite {
     protected AudioDB audioDB = new AudioDB();
     protected Display display = new Display();
     protected IsInteger isInteger = new IsInteger();
-    Playlist playlist = new Playlist();
+    Playlist playlist;
 
     public static void main(String[] args) {
         SQLite sqLite = new SQLite();
@@ -46,14 +46,14 @@ public class SQLite {
         Album tempAlbum;
 
         System.out.println("------------------------MAIN MENU------------------------");
-        System.out.println("-1- Check All Songs, Artists, Albums In The Library");
-        System.out.println("-2- Check A Specific Part Of The Library");
-        System.out.println("-3- Import A Song Into The Library Using SONG NAME");
-        System.out.println("-4- Import An Artist Into The Library Using ARTIST NAME");
-        System.out.println("-5- Import An Album Into The Library Using ARTIST NAME And ALBUM RELEASE DATE");
-        System.out.println("-6- Generate A Playlist");
-        System.out.println("-7- Shuffle A Playlist");
-        System.out.println("-8- Exit");
+        System.out.println("-1- Check All Songs, Artists, Albums In The Database.");
+        System.out.println("-2- Check A Specific Part Of The Database.");
+        System.out.println("-3- Import A Song Into The Database Using SONG NAME.");
+        System.out.println("-4- Import An Artist Into The Database Using ARTIST NAME.");
+        System.out.println("-5- Import An Album Into The Database Using ARTIST NAME And ALBUM RELEASE DATE.");
+        System.out.println("-6- Generate A Playlist.");
+        System.out.println("-7- Shuffle A Playlist.");
+        System.out.println("-8- Exit.");
         System.out.print("Your choice: ");
         userInput = this.input.nextLine();
 
@@ -131,6 +131,7 @@ public class SQLite {
                     }
                     this.mainMenu();
                 case "6":
+                    playlist = new Playlist();
                     playlist = playlist.generatePlaylist(library);
                     this.mainMenu();
                 case "7" :
@@ -146,9 +147,9 @@ public class SQLite {
                     System.out.println("Invalid input. Please enter a number from 1~8.");
                     this.mainMenu();
             }
-            System.out.println("It's so fun to play with you. See you next time!");
-            System.out.println("Good luck!");
-            System.out.println("\uD83D\uDE00");
+            System.out.println("It was fun to play with you. See you next time!");
+            System.out.println("BYE\uD83D\uDE00");
+            System.exit(0);
         } catch (SQLException e) {
             // if the error message is "out of memory",
             // it probably means no database file is found

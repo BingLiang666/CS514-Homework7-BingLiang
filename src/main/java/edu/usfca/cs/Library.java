@@ -122,18 +122,46 @@ public class Library {
         albums.add(album);
     }
 
+    /**
+     *
+     * @return
+     *
+     * This returns true when the artist we are trying to find is already in library.
+     *
+     */
     public boolean isArtistAlreadyInLibrary() {
         return isArtistAlreadyInLibrary;
     }
 
+    /**
+     *
+     * @param artistAlreadyInLibrary a boolean representing if the artist is in the library or not
+     *
+     * This sets the variable artistAlreadyInLibrary
+     *
+     */
     public void setArtistAlreadyInLibrary(boolean artistAlreadyInLibrary) {
         isArtistAlreadyInLibrary = artistAlreadyInLibrary;
     }
 
+    /**
+     *
+     * @return
+     *
+     * This returns true when the album we are trying to find is already in library.
+     *
+     */
     public boolean isAlbumAlreadyInLibrary() {
         return isAlbumAlreadyInLibrary;
     }
 
+    /**
+     *
+     * @param albumAlreadyInLibrary a boolean representing if the album is in the library or not
+     *
+     * This sets the variable albumAlreadyInLibrary
+     *
+     */
     public void setAlbumAlreadyInLibrary(boolean albumAlreadyInLibrary) {
         isAlbumAlreadyInLibrary = albumAlreadyInLibrary;
     }

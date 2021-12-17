@@ -46,13 +46,6 @@ class ArtistTest {
         assertTrue(artist1.albums.size() == 2);
     }
 
-    @Test
-    void equalsTest() {
-        System.out.println(artist1.entityID);
-        System.out.println(artist2.entityID);
-        assertTrue(artist1.equals(artist1));
-        assertFalse(artist1.equals(artist2));
-    }
 
     @Test
     void ToStringTest() {

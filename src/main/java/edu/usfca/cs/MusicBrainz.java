@@ -20,6 +20,7 @@ public class MusicBrainz {
     protected UserPrompt userPrompt = new UserPrompt();
     protected String userInput;
     protected Scanner input = new Scanner(System.in);
+    protected IsInteger isInteger = new IsInteger();
 
     /**
      *
@@ -128,7 +129,7 @@ public class MusicBrainz {
             JSONObject jsonObject = (JSONObject) obj;
             JSONArray releases = (JSONArray) jsonObject.get("releases");
             System.out.println("We have found various of songs containing \"" + songName +
-                    "\".\nFollowings are the top 5 matched searching results.");
+                    "\".\nThe Followings are the top 5 matched searching results.");
             for (int i = 0; i < releases.size() && i < 5; i++) {
                 Song tempSong = new Song();
                 Artist tempArtist = new Artist();
@@ -192,8 +193,14 @@ public class MusicBrainz {
             System.out.println("Great! Now please choose the song which is closest to the song that you are looking for." +
                     "\n(Input the exact number after # to import the chosen one:)");
             userInput = input.nextLine();
-            while (!((userInput.equals("0")) || (userInput.equals("1")) || (userInput.equals("2")) || (userInput.equals("3")) || (userInput.equals("4")))) {
-                System.out.println("Invalid input. Please enter an integer from 0~4.");
+            while (true) {
+                if (isInteger.isInteger(userInput)) {
+                    int index = Integer.valueOf(userInput);
+                    if (index >= 0 && index < duplicatedSongs.size()) {
+                        break;
+                    }
+                }
+                System.out.println("Invalid input. Please enter an integer from 0~" + (duplicatedSongs.size() - 1) + ".");
                 userInput = input.nextLine();
             }
             switch (userInput) {

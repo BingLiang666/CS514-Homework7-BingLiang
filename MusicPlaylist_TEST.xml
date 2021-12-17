@@ -1,13 +1,20 @@
 <playlist>
 <songs>
-<song id="108"> <title>Starlight</title> <artist id="203"> <name>Muse</name> </artist> <album id="304"> <title>Black Holes and Revelations</title> </album> </song>
-<song id="102"> <title>Exile</title> <artist id="201"> <name>Taylor Swift</name> </artist> <album id="301"> <title>Folklore</title> </album> </song>
-<song id="107"> <title>Supermassive Black Hole</title> <artist id="203"> <name>Muse</name> </artist> <album id="304"> <title>Black Holes and Revelations</title> </album> </song>
-<song id="109"> <title>Real Face</title> <artist id="205"> <name>KAT-TUN</name> </artist> <album id="305"> <title>Best of KAT-TUN</title> </album> </song>
-<song id="106"> <title>When We Were Young</title> <artist id="202"> <name>Adele</name> </artist> <album id="303"> <title>25</title> </album> </song>
-<song id="111"> <title>feel</title> <artist id="207"> <name>倖田來未</name> </artist> <album id="307"> <title>null</title> </album> </song>
-<song id="103"> <title>August</title> <artist id="201"> <name>Taylor Swift</name> </artist> <album id="301"> <title>Folklore</title> </album> </song>
 <song id="104"> <title>Hoax</title> <artist id="201"> <name>Taylor Swift</name> </artist> <album id="301"> <title>Folklore</title> </album> </song>
+<song id="110"> <title>Million Reasons</title> <artist id="204"> <name>lady gaga</name> </artist> <album id="305"> <title>Joanne</title> </album> </song>
+<song id="107"> <title>Supermassive Black Hole</title> <artist id="203"> <name>Muse</name> </artist> <album id="304"> <title>Black Holes and Revelations</title> </album> </song>
 <song id="101"> <title>Cardigan</title> <artist id="201"> <name>Taylor Swift</name> </artist> <album id="301"> <title>Folklore</title> </album> </song>
+<song id="108"> <title>Starlight</title> <artist id="203"> <name>Muse</name> </artist> <album id="304"> <title>Black Holes and Revelations</title> </album> </song>
+<song id="106"> <title>When We Were Young</title> <artist id="202"> <name>Adele</name> </artist> <album id="303"> <title>25</title> </album> </song>
+<song id="115"> <title>poker face</title> <artist id="209"> <name>浜崎あゆみ</name> </artist> <album id="311"> <title>A BEST</title> </album> </song>
+<song id="103"> <title>August</title> <artist id="201"> <name>Taylor Swift</name> </artist> <album id="301"> <title>Folklore</title> </album> </song>
+<song id="102"> <title>Exile</title> <artist id="201"> <name>Taylor Swift</name> </artist> <album id="301"> <title>Folklore</title> </album> </song>
+<song id="109"> <title>the 1</title> <artist id="201"> <name>Taylor Swift</name> </artist> <album id="301"> <title>Folklore</title> </album> </song>
+<song id="113"> <title>Stay</title> <artist id="205"> <name>Jeremy Camp</name> </artist> <album id="307"> <title>Stay</title> </album> </song>
+<song id="116"> <title>INDUSTRY BABY</title> <artist id="210"> <name>Lil Nas X</name> </artist> <album id="312"> <title>MONTERO</title> </album> </song>
+<song id="111"> <title>Million Reasons</title> <artist id="204"> <name>lady gaga</name> </artist> <album id="306"> <title>Perfect Illusion</title> </album> </song>
+<song id="114"> <title>Real Face</title> <artist id="207"> <name>kat-tun</name> </artist> <album id="310"> <title>Best of KAT-TUN</title> </album> </song>
+<song id="105"> <title>Easy On Me</title> <artist id="202"> <name>Adele</name> </artist> <album id="302"> <title>30</title> </album> </song>
+<song id="112"> <title>Perfect Illusion</title> <artist id="204"> <name>lady gaga</name> </artist> <album id="306"> <title>Perfect Illusion</title> </album> </song>
 </songs>
 </playlist>

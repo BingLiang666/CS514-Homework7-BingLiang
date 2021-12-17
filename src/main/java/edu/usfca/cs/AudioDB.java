@@ -19,6 +19,7 @@ public class AudioDB {
     protected UserPrompt userPrompt = new UserPrompt();
     protected String userInput;
     protected Scanner input = new Scanner(System.in);
+    protected IsInteger isInteger = new IsInteger();
 
     /**
      *
@@ -191,18 +192,22 @@ public class AudioDB {
                 for (int i = 0; i < numberOfAlbums; i++) {
                     JSONObject requestedArtist = (JSONObject) albums.get(i);
                     String releaseYear = (String) requestedArtist.get("intYearReleased");
-                    if (releaseYear.substring(0,4).equals(releaseDate)) {             // if the release year matches, then this album is possibly what we are looking for
-                        Album tempAlbum = new Album();
-                        tempAlbum.setReleaseDate(releaseYear);
-                        String AudioDB_ID = (String) requestedArtist.get("idAlbum");
-                        tempAlbum.setAudioDB_ID(AudioDB_ID);
-                        String albumName = (String) requestedArtist.get("strAlbum");
-                        tempAlbum.setName(albumName);
-                        String albumGenre = (String) requestedArtist.get("strGenre");
-                        tempAlbum.setAlbumGenre(albumGenre);
-                        duplicatedAlbums.add(tempAlbum);
-                        if (duplicatedAlbums.size() == 5) {              // show maximum 5 albums to user
-                            break;
+                    if (isInteger.isInteger(releaseYear.substring(0,4)) && isInteger.isInteger(releaseDate.substring(0,4))) {
+                        int year1 = Integer.valueOf(releaseYear.substring(0,4));
+                        int year2 =  Integer.valueOf(releaseDate.substring(0,4));
+                        if (year1 == year2) {     // if the release year matches, then this album is possibly what we are looking for
+                            Album tempAlbum = new Album();
+                            tempAlbum.setReleaseDate(releaseYear);
+                            String AudioDB_ID = (String) requestedArtist.get("idAlbum");
+                            tempAlbum.setAudioDB_ID(AudioDB_ID);
+                            String albumName = (String) requestedArtist.get("strAlbum");
+                            tempAlbum.setName(albumName);
+                            String albumGenre = (String) requestedArtist.get("strGenre");
+                            tempAlbum.setAlbumGenre(albumGenre);
+                            duplicatedAlbums.add(tempAlbum);
+                            if (duplicatedAlbums.size() == 5) {              // show maximum 5 albums to user
+                                break;
+                            }
                         }
                     }
                 }
@@ -225,7 +230,7 @@ public class AudioDB {
                         library.addAlbum(newAlbum);
                         System.out.println("Great! Album is successfully chosen.");
                     } else {
-
+                        return null;
                     }
                 } else if (duplicatedAlbums.size() == 1){
                     for (Album a: library.getAlbums()) {
@@ -269,7 +274,7 @@ public class AudioDB {
      *
      */
     public Album selectAlbum(ArrayList<Album> duplicatedAlbums, String artistName) {
-        Album tempAlbum= null;
+        Album tempAlbum = null;
         for (int i = 0; i < duplicatedAlbums.size(); i++) {
             System.out.format("#%-3dAlbum Name:%-40sAudioDB_ID:%-18sArtist Name:%-25sRelease Date:%-15sGenre:%-10s\n", i, duplicatedAlbums.get(i).getName(), duplicatedAlbums.get(i).getAudioDB_ID(),
                     artistName, duplicatedAlbums.get(i).getReleaseDate(), duplicatedAlbums.get(i).getAlbumGenre());
@@ -282,8 +287,14 @@ public class AudioDB {
                 System.out.println("Great! Now please choose the album which is closest to the album that you are looking for." +
                         "\n(Input the exact number after # to import the chosen one:)");
                 userInput = input.nextLine();
-                while (!((userInput.equals("0")) || (userInput.equals("1")) || (userInput.equals("2")) || (userInput.equals("3")) || (userInput.equals("4")))) {
-                    System.out.println("Invalid input. Please enter an integer from 0~4.");
+                while (true) {
+                    if (isInteger.isInteger(userInput)) {
+                        int index = Integer.valueOf(userInput);
+                        if ( index >= 0 && index < duplicatedAlbums.size()) {
+                            break;
+                        }
+                    }
+                    System.out.println("Invalid input. Please enter an integer from 0~" + (duplicatedAlbums.size() - 1) + ".");
                     userInput = input.nextLine();
                 }
                 switch (userInput) {
@@ -306,15 +317,18 @@ public class AudioDB {
                         System.out.println("Bad input.");
                         break;
                 }
+                if (!isInteger.isInteger(tempAlbum.getReleaseDate().substring(0,4))){
+                    System.out.println("Parsing failed...Album release date in bad format.");
+                    return null;
+                }
                 return tempAlbum;
             } else if (userInput.toLowerCase(Locale.ROOT).equals("n")) {
                 System.out.println("Gotcha!");
-                break;
+                return null;
             } else {
                 System.out.println("Invalid input. Please enter \"Y\" or \"N\".");
                 userInput = input.nextLine();
             }
         }
-        return null;
     }
 }

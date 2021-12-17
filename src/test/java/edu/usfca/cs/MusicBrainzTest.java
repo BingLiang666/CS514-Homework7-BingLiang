@@ -59,11 +59,6 @@ class MusicBrainzTest {
         library.addArtist(artist2);
         library.addAlbum(album1);
         library.addAlbum(album2);
-
-    }
-
-    @Test
-    void insertSongsFromMusicBrainz() {
     }
 
     @Test
@@ -73,18 +68,4 @@ class MusicBrainzTest {
         musicBrainz.buildConnectionWithMusicBrainz(songName, response);
     }
 
-    @Test
-    void grabSongs() {
-    }
-
-    @Test
-    void selectSong() {
-    }
-
-    @Test
-    void testGrabSongs() {
-        String songName = "red";
-        musicBrainz.buildConnectionWithMusicBrainz(songName, response);
-        musicBrainz.grabSongs(response, songName, songs, library);
-    }
 }

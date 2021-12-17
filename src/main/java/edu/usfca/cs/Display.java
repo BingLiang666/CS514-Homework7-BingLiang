@@ -133,7 +133,7 @@ public class Display {
         System.out.println("Please enter that year.");
         int year = userPrompt.requestForYear(input);
         this.songsFromCertainYear(library, year);
-        this.requestForAnotherSearch(library);
+        //this.requestForAnotherSearch(library);
     }
 
     /**
@@ -195,7 +195,7 @@ public class Display {
         } else {
             System.out.println("(" + index + " results in total)");
         }
-        this.requestForAnotherSearch(library);
+        //this.requestForAnotherSearch(library);
     }
 
     /**
@@ -214,7 +214,7 @@ public class Display {
                 "albumID", "songReleaseDate", "songLanguage");
         for(Song s: library.getSongs()) {
             String albumName = s.getAlbum().getName().toLowerCase(Locale.ROOT);
-            if (albumName.contains(userInput.toLowerCase(Locale.ROOT))) {
+            if (albumName.toLowerCase(Locale.ROOT).contains(userInput.toLowerCase(Locale.ROOT))) {
                 System.out.printf("%-3s | %-25s | %-36s | %-8s | %-8s | %-16s | %s\n", s.getEntityID(), s.getName(), s.getMusicBrainzID(),
                         s.getPerformer().getEntityID(), s.getAlbum().getEntityID(), s.getSongReleaseDate(), s.getSongLanguage());
                 index++;
@@ -227,7 +227,7 @@ public class Display {
         } else {
             System.out.println("(" + index + " results in total)");
         }
-        this.requestForAnotherSearch(library);
+        //this.requestForAnotherSearch(library);
     }
 
     /**
@@ -285,7 +285,7 @@ public class Display {
         } else {
             System.out.println("(" + index + " results in total)");
         }
-        this.requestForAnotherSearch(library);
+        //this.requestForAnotherSearch(library);
     }
 
     /**
@@ -324,7 +324,7 @@ public class Display {
         } else {
             System.out.println("(" + index + " results in total)");
         }
-        this.requestForAnotherSearch(library);
+        //this.requestForAnotherSearch(library);
     }
 
     /**
@@ -349,7 +349,6 @@ public class Display {
             default:
                 System.out.println("Invalid input. Please enter a number from 1~2.");
                 this.displayPartOfAlbumsInLibrary(library);
-                //userInput = input.nextLine();
         }
     }
 
@@ -376,13 +375,13 @@ public class Display {
             }
         }
         if (index == 0) {
-            System.out.println("No qualified artists in the current database. You can add such artists later.");
+            System.out.println("No qualified artists in the current database. You can add such albums later.");
         } else if (index == 1){
             System.out.println("(1 result in total)");
         } else {
             System.out.println("(" + index + " results in total)");
         }
-        this.requestForAnotherSearch(library);
+        //this.requestForAnotherSearch(library);
     }
 
     /**
@@ -408,13 +407,13 @@ public class Display {
             }
         }
         if (index == 0) {
-            System.out.println("No qualified artists in the current database. You can add such artists later.");
+            System.out.println("No qualified artists in the current database. You can add such albums later.");
         } else if (index == 1){
             System.out.println("(1 result in total)");
         } else {
             System.out.println("(" + index + " results in total)");
         }
-        this.requestForAnotherSearch(library);
+        //this.requestForAnotherSearch(library);
     }
 
     /**

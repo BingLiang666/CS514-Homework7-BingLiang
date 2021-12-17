@@ -20,11 +20,5 @@ class EntityTest {
         System.out.println(e2.entityID);
     }
 
-    @Test
-    public void equalsTest() {
-        System.out.println(e1.entityID);
-        System.out.println(e2.entityID);
-        assertTrue(e1.equals(e1));
-        assertFalse(e1.equals(e2));
-    }
+
 }

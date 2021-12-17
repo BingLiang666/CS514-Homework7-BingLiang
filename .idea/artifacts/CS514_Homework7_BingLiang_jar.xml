@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact name="CS514-Homework7-BingLiang:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/CS514_Homework7_BingLiang_jar</output-path>
+    <root id="root">
+      <element id="archive" name="CS514-Homework7-BingLiang.jar">
+        <element id="module-output" name="CS514-Homework7-BingLiang" />
+      </element>
+      <element id="directory" name="lib">
+        <element id="library" level="project" name="json-simple-1.1.1" />
+      </element>
+    </root>
+  </artifact>
+</component>

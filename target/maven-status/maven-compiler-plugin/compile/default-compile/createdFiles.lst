@@ -1,0 +1,14 @@
+edu/usfca/cs/Song.class
+edu/usfca/cs/SQLite.class
+edu/usfca/cs/IsInteger.class
+edu/usfca/cs/UserPrompt.class
+edu/usfca/cs/Artist.class
+edu/usfca/cs/AudioDB.class
+edu/usfca/cs/MusicBrainz.class
+edu/usfca/cs/Entity.class
+edu/usfca/cs/SongInterval.class
+edu/usfca/cs/Display.class
+edu/usfca/cs/App.class
+edu/usfca/cs/Playlist.class
+edu/usfca/cs/Library.class
+edu/usfca/cs/Album.class

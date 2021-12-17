@@ -181,8 +181,8 @@ public class Playlist {
      */
     public Playlist generatePlaylist(Library library) {
         System.out.println("In which way would you prefer to generate the playlist?(Please enter 1 or 2.)");
-        System.out.println("-1- By Likes Of Song");
-        System.out.println("-2- By Release Year Of Song");
+        System.out.println("-1- By Likes Of Song.");
+        System.out.println("-2- By Release Year Of Song.");
         userInput = input.nextLine();
         switch (userInput) {
             case "1":
@@ -207,12 +207,11 @@ public class Playlist {
      *
      */
     public Playlist generatePlaylistByLikes(Library library, Scanner input) {
-        System.out.println("First, let's check if all the songs in library have likes.");
-        System.out.println("You might need to set likes for each song manually for the first time.");
+        //System.out.println("First, let's check if all the songs in library have likes.");
+        System.out.println("You might need to set likes for each song manually first.");
         System.out.println("(To set likes for a song, you are required to enter an INTEGER between 1~5 that represents the level you like the song.)");
         for (Song s: library.getSongs()) {
             if (s.getLikes() == 0) {
-                System.out.print("Please set likes for the song \"" + s.getName() + "\": ");
                 int likes = userPrompt.promptUserForLikes(s, input);
                 s.setLikes(likes);
             }
@@ -226,7 +225,7 @@ public class Playlist {
         }
         this.sort();
         this.writingXMLForPlaylist();
-        System.out.println("Playlist based on likes of song is generated successfully.\nPlease NOTE: Songs in this playlist are sorted by their likes from high to low.");
+        System.out.println("Playlist based on likes of song is generated successfully.\nPlease NOTE: Songs in this playlist are sorted by their likes from the highest to lowest.");
         return this;
     }
 
@@ -240,7 +239,7 @@ public class Playlist {
      *
      */
     public Playlist generatePlaylistByReleaseYear(Library library, Scanner input) {
-        System.out.println("Please indicate songs after which year would you like to add into the playlist?");
+        System.out.println("Please indicate songs after which year would you like to add into the playlist.");
         int year = userPrompt.requestForYear(input);
         for (Song s: library.getSongs()) {
             if (Integer.parseInt(s.getSongReleaseDate().substring(0,4)) >= year) {
@@ -264,7 +263,7 @@ public class Playlist {
     public Playlist shufflePlaylist(Library library, Scanner input) {
         this.shuffle();
         this.writingXMLForPlaylist();
-        System.out.println("Playlist is shuffled successfully.");
+        System.out.println("Playlist has been shuffled successfully.");
         return this;
     }
 }

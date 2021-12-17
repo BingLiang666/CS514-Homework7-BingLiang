@@ -16,6 +16,7 @@ public class Song extends Entity implements Comparable<Song> {
     protected UserPrompt userPrompt = new UserPrompt();
     AudioDB audioDB = new AudioDB();
     MusicBrainz musicBrainz = new MusicBrainz();
+    Artist newArtist;
 
     /**
      * This is a constructor.
@@ -420,7 +421,6 @@ public class Song extends Entity implements Comparable<Song> {
     public boolean setArtistForSong(Library library) {
         int flag = 0;
         Connection connection = null;
-        Artist newArtist;
         for (Artist a: library.getArtists()) {
             if (this.getPerformer().getName().equalsIgnoreCase(a.getName())) {       // if there is the artist of the song in the library, we use this directly
                 System.out.println("Great! We have found an artist in the library!");
@@ -428,8 +428,9 @@ public class Song extends Entity implements Comparable<Song> {
                 System.out.format("Artist Name:%-40sAudioDB_ID:%-18sArtist Style:%-10sArtist Area:%-10s\n", a.getName(), a.getAudioDB_ID(),
                         a.getStyle(), a.getArtistArea());
                 System.out.println("We will link this artist with the song.");
-                this.setPerformer(a);
-                a.addSong(this);
+                newArtist = a;
+                this.setPerformer(newArtist);
+                //a.addSong(this);
                 flag = 1;
                 library.setArtistAlreadyInLibrary(true);
                 return true;
@@ -453,7 +454,7 @@ public class Song extends Entity implements Comparable<Song> {
                      */
                     System.out.println("We will link this artist to the song.");
                     this.setPerformer(newArtist);       // if we have founded the artist of the song and successfully imported the artist to the library, we link the song and newly imported artist together
-                    newArtist.addSong(this);
+                    //newArtist.addSong(this);
                     return true;                        // if the artist has been successfully linked with the song, return true. (this will help us decide whether we could search album in AudioDB later)
                 }
                 return false;                           // if the artist has not been successfully linked with the song, return false
@@ -499,6 +500,8 @@ public class Song extends Entity implements Comparable<Song> {
                         this.getPerformer().addAlbum(a);     // if they answer yes then we directly link the song, artist, album together
                         a.setArtist(this.getPerformer());
                         a.addSong(this);
+                        this.setPerformer(newArtist);
+                        newArtist.addSong(this);
                         flag = 1;
                         library.setAlbumAlreadyInLibrary(true);
                         return true;
@@ -523,9 +526,10 @@ public class Song extends Entity implements Comparable<Song> {
                             newAlbum.getAlbumGenre(), newAlbum.getReleaseDate());
                     */
                     this.setAlbum(newAlbum);          // if we have found the album of the song and successfully imported the album to the library, we link the song, artist and newly imported album together
-                    this.getPerformer().addAlbum(newAlbum);
+
                     newAlbum.setArtist(this.getPerformer());
                     newAlbum.addSong(this);
+                    newArtist.addSong(this);
                     return true;
                 }
                 return false;
