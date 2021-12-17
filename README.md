@@ -8,7 +8,7 @@ While it is running, some data in the database will be dynamically updated if an
 It could be run in both IntelliJ and Terminal(ex. run the Jar file created by Maven).
 
 ## Running in IntelliJ
-1. Copy http URL in Github repo
+1. Copy HTTPS URL of Github repo.
 2. Open IntelliJ File -> New -> Project From Version Control -> paste the URL you just copied in the URL blanket -> Click Clone
 3. Go to src/main/java/edu.usfca.cs SQLite.class
 4. Run SQLite.main()
@@ -144,15 +144,15 @@ Step1. Go to the directory where the jar file locates.
 Step2. Run the jar file.
 
        java -jar homework7-CS514-1.0-SNAPSHOT.jar
-Tips. Use Maven to create jar for the first time?
-1) Since there are 2 external packages(i.e. "json-simple-1.1.1.jar" and "sqlite-jdbc-3.36.0.3.jar") that we will use in this project, we need to add them into the target directory after the install.
+Tips: Use Maven to create jar for the first time?
+1) Since there are 2 external packages(i.e. "json-simple-1.1.1.jar" and "sqlite-jdbc-3.36.0.3.jar") that we will use in this project, we need to copy the "lib" folder in the out/artifacts/CS514_Homework7_BingLiang_jar directory and paste it into the target directory after the install.
 2) We need to put the .db file(i.e. "music.db" for this project) that has at least three tables(songs, artists and albums) into the target directory.  
 
 ## Acknowledgements
 
 This project is based on several homeworks. 
 
-Many thanks to Professor Christopher Brooks and people who have offered me helps.
+Many thanks to Professor Christopher Brooks and people who helped me.
 
-Best wishes to you all!
+Best wishes to you all😀
      
