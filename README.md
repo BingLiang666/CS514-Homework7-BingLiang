@@ -81,7 +81,7 @@ The followings are detailed descriptions of its functions and how to use them:
    
    1.2.3.1 Display albums owned by certain artist
    
-    1) Choose -2- in the prompt "Albums from certain artists.".
+    1) Choose -1- in the prompt "Albums from certain artists.".
     2) Enter a string representing the artist name.
       
    1.2.3.2 Display albums in certain genre
@@ -114,7 +114,7 @@ The followings are detailed descriptions of its functions and how to use them:
 
   3.1 Generate a playlist
   
-    Choose -5- in the Main Menu.
+    Choose -6- in the Main Menu.
   
   3.1.1 By likes of song
   
@@ -152,7 +152,7 @@ Tips. Use Maven to create jar for the first time?
 
 This project is based on several homeworks. 
 
-Many thanks to Professor Christopher Brooks and people who have offered me help.
+Many thanks to Professor Christopher Brooks and people who have offered me helps.
 
 Best wishes to you all!
      
