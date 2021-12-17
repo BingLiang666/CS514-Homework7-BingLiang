@@ -3,7 +3,7 @@ This is a music management tool for music database that contains 3 tables: songs
 
 It offers users a various of ways to 1) diaplay detailed music information 2) import music entities into database 3) automatically fill in the missing details of music entities using AudioDB(for artist and album) and MusicBranz(for song) 4) genetate and manage the playlist in different ways.
 
-While it is running, some data in the database will be dynamically updated if any change happens, such as the "nSongs" and the "nAlbums" in the table "artist" and the "nSongs" in the table "album".
+While it is running, some data in the database will be dynamically updated if any change happens, such as the "nSongs" and the "nAlbums" in the table "artists" and the "nSongs" in the table "albums".
 
 It could be run in both IntelliJ and Terminal(ex. run the Jar file created by Maven).
 
