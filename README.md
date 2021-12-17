@@ -152,9 +152,10 @@ Step3. Once this repo has been cloned successfully, open terminal and go to the 
         cd ~/.../CS514-Homework7-BingLiang/target
 Step4. Run the jar file.
 
+       java -jar homework7-CS514-1.0-SNAPSHOT.jar
+       
 Step5. Follow the prompts to play with it :)
 
-       java -jar homework7-CS514-1.0-SNAPSHOT.jar
 Tips: Use Maven to create jar for the first time?
 1) Since there are 2 external packages(i.e. "json-simple-1.1.1.jar" and "sqlite-jdbc-3.36.0.3.jar") that we will use in this project, we need to copy the "lib" folder in the out/artifacts/CS514_Homework7_BingLiang_jar directory that contains those 2 external packages and paste it into the target directory after the install.
 2) We need to put the .db file(i.e. "music.db" for this project) that has at least three tables(songs, artists and albums) into the target directory.  
