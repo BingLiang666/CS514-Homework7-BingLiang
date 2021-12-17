@@ -8,11 +8,16 @@ While it is running, some data in the database will be dynamically updated if an
 It could be run in both IntelliJ and Terminal(ex. run the Jar file created by Maven).
 
 ## Running in IntelliJ
-1. Copy HTTPS URL of Github repo.
-2. Open IntelliJ File -> New -> Project From Version Control -> paste the URL you just copied in the URL blanket -> Click Clone
-3. Go to src/main/java/edu.usfca.cs SQLite.class
-4. Run SQLite.main()
-5. Follow the prompts to play with it :)
+Step1. Copy HTTPS URL of the Github repo.
+
+Step2. Open IntelliJ File -> New -> Project From Version Control -> paste the URL you just copied in the URL blanket -> Click Clone
+
+Step3. Once this repo has been cloned successfully, open it in IntelliJ and go to src/main/java/edu.usfca.cs SQLite.class
+
+Step4. Run SQLite.main()
+
+Step5. Follow the prompts to play with it :)
+
 
 Once the program is running, we will see the following interface in the console:
 
@@ -30,7 +35,7 @@ Once the program is running, we will see the following interface in the console:
     Your choice:
   
 
-The followings are detailed descriptions of its functions and how to use them:
+The followings are instructions of how to use all the functions of Music Garden:
 
 ## 1. Display
 
@@ -138,14 +143,20 @@ The followings are detailed descriptions of its functions and how to use them:
     
 ## Running in Terminal
 
-Step1. Go to the directory where the jar file locates.
+Step1. Copy HTTPS URL of the Github repo.
+
+Step2. Open IntelliJ File -> New -> Project From Version Control -> paste the URL you just copied in the URL blanket -> Click Clone
+
+Step3. Once this repo has been cloned successfully, open terminal and go to the directory where the jar file locates.
 
         cd ~/.../CS514-Homework7-BingLiang/target
-Step2. Run the jar file.
+Step4. Run the jar file.
+
+Step5. Follow the prompts to play with it :)
 
        java -jar homework7-CS514-1.0-SNAPSHOT.jar
 Tips: Use Maven to create jar for the first time?
-1) Since there are 2 external packages(i.e. "json-simple-1.1.1.jar" and "sqlite-jdbc-3.36.0.3.jar") that we will use in this project, we need to copy the "lib" folder in the out/artifacts/CS514_Homework7_BingLiang_jar directory and paste it into the target directory after the install.
+1) Since there are 2 external packages(i.e. "json-simple-1.1.1.jar" and "sqlite-jdbc-3.36.0.3.jar") that we will use in this project, we need to copy the "lib" folder in the out/artifacts/CS514_Homework7_BingLiang_jar directory that contains those 2 external packages and paste it into the target directory after the install.
 2) We need to put the .db file(i.e. "music.db" for this project) that has at least three tables(songs, artists and albums) into the target directory.  
 
 ## Acknowledgements
